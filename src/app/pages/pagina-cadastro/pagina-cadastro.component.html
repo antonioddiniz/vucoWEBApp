@@ -1,0 +1,162 @@
+<form (submit)="registerUser()" style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; background-color: #f5f5f5;">
+    <div style="background-color: #004C99; padding: 2px; color: white">
+        <h1 style="margin-left: 5%; font-size:extra-large">Cadastro</h1>
+    </div>
+    
+   <div class="divContainer">
+    <div style="display: block; width:100%">
+        <h2>Dados Pessoais</h2>
+    </div>
+        <div style="width:30%;">
+            <label class="inputLabel" for="cpf">CPF:</label>
+            <br>
+            <input class="inputBox" type="text" id="cpf" name="cpf" [(ngModel)]="cpf" required>
+        </div>
+        <div style="width: 60%; margin-bottom: 2%">
+            <label class="inputLabel" for="nome">Nome completo:</label>
+            <input class="inputBox" type="text" id="nome" name="nome" [(ngModel)]="nome" required>
+        </div>
+        
+        <div style="width:30%">
+            <label class="inputLabel" for="dataNascimento">Data de Nascimento:</label>
+            <input class="inputBox" type="date" id="dataNascimento" name="dataNascimento" [(ngModel)]="dataNascimento" required>
+        </div>
+        <div style="width:30%">
+            <label class="inputLabel" for="email">Email:</label>
+            <input class="inputBox" type="email" id="email" name="email" [(ngModel)]="email" required>
+        </div>
+        <div style="width:30%">
+            <label class="inputLabel" for="telefone">Telefone:</label>
+            <input class="inputBox" type="text" id="telefone" name="telefone" [(ngModel)]="telefone" required>
+        </div>
+
+   </div>     
+
+   <div class="divContainer">
+    <div style="display: block; width:100%">
+        <h2>Dados de endereço</h2>
+    </div>
+
+    
+    <div style="width:70%">
+        <label class="inputLabel" for="endereco">Endereço:</label>
+        <input class="inputBox" type="text" id="endereco" name="endereco" [(ngModel)]="endereco" required>
+    </div>
+    
+    <div style="width: 20%;">
+        <label class="inputLabel" for="cep">CEP:</label>
+        <input class="inputBox" type="text" id="cep" name="cep" [(ngModel)]="cep" required>
+    </div>
+    
+    <div style="width: 30%;">
+        <label class="inputLabel" for="cidade">Cidade:</label>
+        <input class="inputBox" type="text" id="cidade" name="cidade" [(ngModel)]="cidade" required>
+    </div>
+    
+    <div>
+        <label class="inputLabel" for="estado">Estado:</label>
+        <select class="inputBox" id="estado" name="estado" [(ngModel)]="estado" required>
+            <option value="AC">AC</option>
+            <option value="AL">AL</option>
+            <option value="AP">AP</option>
+            <option value="AM">AM</option>
+            <option value="BA">BA</option>
+            <option value="CE">CE</option>
+            <option value="DF">DF</option>
+            <option value="ES">ES</option>
+            <option value="GO">GO</option>
+            <option value="MA">MA</option>
+            <option value="MT">MT</option>
+            <option value="MS">MS</option>
+            <option value="MG">MG</option>
+            <option value="PA">PA</option>
+            <option value="PB">PB</option>
+            <option value="PR">PR</option>
+            <option value="PE">PE</option>
+            <option value="PI">PI</option>
+            <option value="RJ">RJ</option>
+            <option value="RN">RN</option>
+            <option value="RS">RS</option>
+            <option value="RO">RO</option>
+            <option value="RR">RR</option>
+            <option value="SC">SC</option>
+            <option value="SP">SP</option>
+            <option value="SE">SE</option>
+            <option value="TO">TO</option>
+        </select>
+    </div>
+    
+    
+    <div>
+        <label class="inputLabel" for="pais">País:</label>
+        <input class="inputBox" type="text" id="pais" name="pais" [(ngModel)]="pais" required>
+    </div>
+    </div>
+
+    
+
+
+
+
+    <!-- pagina-cadastro.component.html -->
+<div class="divContainer">
+    <div style="display: block; width:100%">
+      <h2>Definição de senha</h2>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; width: 100%;">
+        <div style="flex: 1; margin-right: 10px; ">
+          <label class="inputLabel" for="senha">Senha:</label>
+          <input class="inputBox" type="password" id="senha" name="senha" [(ngModel)]="senha" required>
+        </div>
+        <div style="flex: 1; margin-left: 10px; ">
+          <label class="inputLabel" for="confirmaSenha">Confirme a Senha:</label>
+          <input class="inputBox" type="password" id="confirmaSenha" name="confirmaSenha" [(ngModel)]="confirmaSenha" required>
+        </div>
+    </div>
+      
+
+  </div>
+  
+    <!-- <div class="divContainer">
+        <div style="display: block; width:100%">
+            <h2>Definição de senha</h2>
+        </div>
+    
+        <div>
+            <label class="inputLabel" for="senha">Senha:</label>
+            <input class="inputBox" type="password" id="senha" name="senha" [(ngModel)]="senha" required>
+        </div>
+        <div>
+            <label class="inputLabel" for="confirmaSenha">Confirme a Senha:</label>
+            <input class="inputBox" type="password" id="confirmaSenha" name="confirmaSenha" required>
+        </div>
+    
+        <div>
+            <button type="button" onclick="verificarSenhas()">Enviar</button>
+        </div>
+    </div> -->
+    
+    
+
+
+
+    
+    <!-- <div>
+        <label class="inputLabel" for="foto">Foto:</label>
+        <input class="inputBox" type="text" id="foto" name="foto" [(ngModel)]="foto" required>
+    </div> -->
+    
+    <div style="display: flex; justify-content: center; margin:100px">
+        <button type="submit" style="border-radius: 2rem; border: 0px black solid; background-color: #004C99; color: white; margin-right: 5%; width: 40%; height: 40px;">
+          Cadastrar
+        </button>
+      </div>
+      
+
+
+
+        
+
+    
+</form>

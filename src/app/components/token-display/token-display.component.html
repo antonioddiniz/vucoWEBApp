@@ -1,0 +1,20 @@
+<div *ngIf="token; else noToken">
+    <h3>Seu token:</h3>
+    <p>{{ token }}</p>
+  </div>
+  <ng-template #noToken>
+    <p>Nenhum token encontrado, por favor, faça o login.</p>
+  </ng-template>
+
+  <div *ngIf="userInfo">
+    <h2>Informações</h2>
+    <p><strong>ID:</strong> {{ userInfo.id }}</p>
+    <p><strong>Nome:</strong> {{ userInfo.nome }}</p>
+    <p><strong>Email:</strong> {{ userInfo.email }}</p>
+    <!-- Adicione outras propriedades conforme necessário -->
+  </div>
+  <div *ngIf="!userInfo">
+    <p>Carregando informações do usuário...</p>
+  </div>
+  
+  
