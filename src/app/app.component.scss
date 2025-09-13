@@ -1,3 +1,12 @@
+
+body {
+  max-width: 800px;
+  margin: 0 ; /* Centraliza o conteúdo na tela */
+  padding: 0 ; /* Opcional: adiciona um espaço de padding para o conteúdo */
+}
+
+
+
 .header {
     background-color: red;
 }
@@ -7,20 +16,41 @@
 }
 
 .logout-button {
-    background-color: red;
-    border: none;
-    border-radius: 50%; // Torna o botão circular
-    color: white;
-    width: 40px; // Define o tamanho do botão
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+.logout-icon {
+  fill: currentColor;
+  width: 24px;
+  height: 24px;
+}
+
+  
+
+
+  .button-claro{
+    border-radius: 2rem; 
+    border: 1px black solid; 
+    background-color: white; 
+    color: black; 
+    margin-right: 5%; 
+    width: 50%; 
     height: 40px;
-    padding: 0;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
-  
-  .logout-icon {
-    font-size: 16px; // Define o tamanho do ícone "X"
+
+
+  .button-escuro{
+    border-radius: 2rem; 
+    border: 0px black solid; 
+    background-color: #004C99; 
+    color: white; 
+    margin-right: 5%; 
+    width: 40%; 
+    height: 40px;
   }
-  

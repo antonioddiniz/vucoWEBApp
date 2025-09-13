@@ -1,0 +1,30 @@
+<div class="produto-detalhes-container" *ngIf="produto">
+    
+    <mat-card class="produto-detalhes-card">
+        <mat-card-actions>
+            <button mat-button routerLink="/lista-produto">Voltar</button>
+          </mat-card-actions>
+      <div class="produto-imagem">
+        <img [src]="produto.imagem" alt="{{ produto.nome }}">
+      </div>
+      <mat-card-content>
+        <h1 mat-card-title>{{ produto.nome }}</h1>
+        <p mat-card-subtitle><strong>Categoria:</strong> {{ produto.categoria }}</p>
+        <p>{{ produto.descricao }}</p>
+        <p><strong>Data de Criação:</strong> {{ produto.dataDeCriacao | date }}</p>
+        <p><strong>Status:</strong>
+          <span *ngIf="produto.status === 1">Disponível</span>
+          <span *ngIf="produto.status === 2">Indisponível</span>
+      </p>
+      <p><strong>Dono:</strong> {{ produto.usuarioId }}</p>
+
+            </mat-card-content>
+
+    </mat-card>
+  </div>
+  
+  <!-- Opcional: Exibir uma mensagem de carregamento enquanto o produto está sendo carregado -->
+  <div *ngIf="!produto">
+    <p>Carregando detalhes do produto...</p>
+  </div>
+  

@@ -1,0 +1,70 @@
+.produto-card {
+  width: 275px; /* Defina o tamanho fixo do card conforme necessário */
+  margin: 10px; /* Espaçamento entre os cards */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.produto-imagem {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px; /* Altura fixa para o contêiner da imagem */
+}
+
+.produto-imagem img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain; /* Mantém a proporção da imagem e a ajusta dentro do contêiner */
+}
+
+.swiper-container {
+  width: 100%;
+  height: auto; /* Ajuste conforme necessário para ocupar a altura desejada */
+}
+
+.swiper-slide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%; /* Garante que o slide ocupe toda a altura do swiper-container */
+}
+
+.swiper-slide img {
+  max-width: 100%; /* Garante que a imagem não ultrapasse o slide */
+  max-height: 100%; /* Garante que a imagem não ultrapasse o slide */
+  object-fit: contain; /* Mantém a proporção da imagem e a ajusta dentro do contêiner */
+  display: block; /* Garante que a imagem se comportará como um bloco */
+}
+
+
+.button-trocar {
+  background-color: #004C99 ;
+  border: none;
+  border-radius: 16px; // Torna o botão circular
+  color: white;
+  width: 100px; // Define o tamanho do botão
+  height: 40px;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.button-detalhes {
+  background-color: white ;
+  border: none;
+  border-radius: 16px; // Torna o botão circular
+  border: 1px solid #004C99;
+  color: #004C99;
+  width: 100px; // Define o tamanho do botão
+  height: 40px;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

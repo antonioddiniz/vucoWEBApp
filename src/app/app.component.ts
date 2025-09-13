@@ -23,7 +23,7 @@ export class AppComponent {
   }
 
   redirectToHome() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/lista-produto']);
   }
 
   isAuthenticated(): boolean {
@@ -33,6 +33,24 @@ export class AppComponent {
   logout() {
     this.authService.logout(); // Chama o método logout do serviço de autenticação
   }
+
+  redirectToCriarProduto() {
+    console.log('Botão clicado, redirecionando para criar-produto');
+    this.router.navigate(['/criar-produto']);
+  }
+
+  navigateToMyProducts(): void {
+    this.authService.getUserInfo().subscribe(
+      userInfo => {
+        const userId = userInfo.id;
+        this.router.navigate([`/produtos/usuario/${userId}`]);
+      },
+      error => {
+        console.error('Erro ao obter informações do usuário:', error);
+      }
+    );
+  }
+  
   
   title = 'vucoAPPWeb2';
 }

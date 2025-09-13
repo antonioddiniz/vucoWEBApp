@@ -1,0 +1,86 @@
+<div class="form-container">
+  <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="fill">
+      <mat-label>Nome</mat-label>
+      <input matInput id="nome" formControlName="nome" type="text" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Descrição</mat-label>
+      <input matInput id="descricao" formControlName="descricao" type="text" />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Categoria</mat-label>
+      <mat-select id="categoria" formControlName="categoria">
+        <mat-option value="Eletrônicos">Eletrônicos</mat-option>
+        <mat-option value="Informática">Informática</mat-option>
+        <mat-option value="Casa">Casa</mat-option>
+        <mat-option value="Decoração">Decoração</mat-option>
+        <mat-option value="Jardinagem">Jardinagem</mat-option>
+        <mat-option value="Ferramentas">Ferramentas</mat-option>
+        <mat-option value="Infantil">Infantil</mat-option>
+        <mat-option value="Vestuário">Vestuário</mat-option>
+        <mat-option value="Alimentos">Alimentos</mat-option>
+        <mat-option value="Brinquedos">Brinquedos</mat-option>
+        <mat-option value="Móveis">Móveis</mat-option>
+        <mat-option value="Beleza">Beleza</mat-option>
+        <mat-option value="Automóveis">Automóveis</mat-option>
+        <mat-option value="Esportes">Esportes</mat-option>
+        <mat-option value="Livros">Livros</mat-option>
+        <mat-option value="Música">Música</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div>
+      <label for="imagem">Imagem</label>
+      <input id="imagem" type="file" (change)="onFileChange($event)" />
+    </div>
+
+    <button mat-raised-button color="primary" type="submit">Cadastrar Produto</button>
+  </form>
+</div>
+
+
+
+
+<!-- 
+
+<form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+  <div>
+    <label for="nome">Nome:</label>
+    <input id="nome" formControlName="nome" type="text" />
+  </div>
+  <div>
+    <label for="descricao">Descrição:</label>
+    <input id="descricao" formControlName="descricao" type="text" />
+  </div>
+  <div>
+    <label for="categoria">Categoria:</label>
+    <select id="categoria" formControlName="categoria">
+      <option value="Eletrônicos">Eletrônicos</option>
+      <option value="Informática">Informática</option>
+      <option value="Casa">Casa</option>
+      <option value="Decoração">Decoração</option>
+      <option value="Jardinagem">Jardinagem</option>
+      <option value="Ferramentas">Ferramentas</option>
+      <option value="Infantil">Infantil</option>
+      <option value="Vestuário">Vestuário</option>
+      <option value="Alimentos">Alimentos</option>
+      <option value="Brinquedos">Brinquedos</option>
+      <option value="Móveis">Móveis</option>
+      <option value="Beleza">Beleza</option>
+      <option value="Automóveis">Automóveis</option>
+      <option value="Esportes">Esportes</option>
+      <option value="Livros">Livros</option>
+      <option value="Música">Música</option>
+    </select>
+  </div>
+  
+  
+  <div>
+    <label for="imagem">Imagem:</label>
+    <input id="imagem" type="file" (change)="onFileChange($event)" />
+  </div>
+  <button type="submit">Cadastrar Produto</button>
+</form> -->

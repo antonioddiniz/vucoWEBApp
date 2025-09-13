@@ -1,0 +1,24 @@
+.produto-detalhes-container {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+  }
+  
+  .produto-detalhes-card {
+    width: 100%;
+    max-width: 800px; /* Limita a largura máxima do card */
+    margin: 0 auto;
+  }
+  
+  .produto-imagem {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .produto-imagem img {
+    max-width: 100%; /* Garante que a imagem não ultrapasse a largura do contêiner */
+    height: auto;
+    object-fit: contain;
+  }
+  

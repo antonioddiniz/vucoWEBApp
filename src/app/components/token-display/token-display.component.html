@@ -1,6 +1,6 @@
-<div *ngIf="token; else noToken">
+<div *ngIf="token; else noToken" style="margin-top: 800px;">
     <h3>Seu token:</h3>
-    <p>{{ token }}</p>
+    <p style="max-width: 800px; word-wrap: break-word; overflow-wrap: break-word;">{{ token }}</p>
   </div>
   <ng-template #noToken>
     <p>Nenhum token encontrado, por favor, faça o login.</p>

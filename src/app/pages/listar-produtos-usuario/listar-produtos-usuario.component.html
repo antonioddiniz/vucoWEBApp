@@ -1,0 +1,24 @@
+
+<div class="produtos-container">
+    <mat-grid-list cols="5" rowHeight="1:1.5">
+      <mat-grid-tile *ngFor="let produto of produtos" class="produto-card">
+        <mat-card class="produto-card">
+          <div class="produto-imagem">
+            <img [src]="produto.imagem" alt="{{ produto.nome }}">
+          </div>
+          <mat-card-content>
+            <h2 mat-card-title>{{ produto.nome }}</h2>
+            <p mat-card-subtitle>{{ produto.categoria }}</p>
+            <p>{{ produto.descricao }}</p>
+            <p><strong>Dono:</strong> {{ produto.usuarioId }}</p>
+          </mat-card-content>
+          <mat-card-actions style="display: flex; justify-content: space-evenly;">
+            <button mat-button class="button-detalhes" [routerLink]="['/detalhes-produto', produto.id]">Ver Detalhes</button>
+          </mat-card-actions>
+        </mat-card>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </div>
+  
+  
+  

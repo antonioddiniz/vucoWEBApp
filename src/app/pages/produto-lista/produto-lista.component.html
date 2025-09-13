@@ -1,0 +1,82 @@
+<swiper-container class="swiper-container" style="margin:2%;">
+  <swiper-slide class="swiper-slide">
+    <img src="assets/3.png" alt="Imagem 1">
+  </swiper-slide>
+  <swiper-slide class="swiper-slide">
+    <img src="assets/2.png" alt="Imagem 2">
+  </swiper-slide>
+  <img src="assets/1.png" alt="Imagem 2">
+</swiper-container>
+
+
+
+<div class="produtos-container">
+  <ng-container *ngIf="produtos?.length; else loading">
+    <mat-grid-list cols="5" rowHeight="1:1.5">
+      <mat-grid-tile *ngFor="let produto of produtos" class="produto-card">
+        <mat-card class="produto-card">
+          <div class="produto-imagem">
+            <img [src]="produto.imagem" alt="{{ produto.nome }}">
+          </div>
+          <mat-card-content>
+            <h2 mat-card-title>{{ produto.nome }}</h2>
+            <p mat-card-subtitle>{{ produto.categoria }}</p>
+            <p>{{ produto.descricao }}</p>
+            <p><strong>Dono:</strong> {{ produto.usuarioId }}</p>
+          </mat-card-content>
+          <mat-card-actions style="display: flex; justify-content: space-evenly;">
+            <button mat-button class="button-detalhes" [routerLink]="['/detalhes-produto', produto.id]">Ver Detalhes</button>
+            <button mat-button class="button-trocar" style="color:white">Quero trocar</button>
+          </mat-card-actions>
+        </mat-card>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </ng-container>
+
+  <ng-template #loading>
+    <div class="loading-container">
+      <mat-spinner></mat-spinner>
+      <p>Carregando produtos...</p>
+    </div>
+  </ng-template>
+</div>
+
+<!-- 
+<div class="produtos-container">
+  <mat-grid-list cols="5" rowHeight="1:1.5">
+    <mat-grid-tile *ngFor="let produto of produtos" class="produto-card">
+      <mat-card class="produto-card">
+        <div class="produto-imagem">
+          <img [src]="produto.imagem" alt="{{ produto.nome }}">
+        </div>
+        <mat-card-content>
+          <h2 mat-card-title>{{ produto.nome }}</h2>
+          <p mat-card-subtitle>{{ produto.categoria }}</p>
+          <p>{{ produto.descricao }}</p>
+          <p><strong>Dono:</strong> {{ produto.usuarioId }}</p>
+        </mat-card-content>
+        <mat-card-actions style="display: flex; justify-content: space-evenly;">
+          <button mat-button class="button-detalhes" [routerLink]="['/detalhes-produto', produto.id]">Ver Detalhes</button>
+          <button mat-button class="button-trocar" style="color:white">Quero trocar</button>
+        </mat-card-actions>
+      </mat-card>
+    </mat-grid-tile>
+  </mat-grid-list>
+</div>
+
+
+ -->
+
+
+<!-- <div *ngFor="let produto of produtos" class="produto-item">
+    <div class="produto-imagem">
+      <img [src]="produto.imagem" alt="{{produto.nome}}">
+    </div>
+    <div class="produto-detalhes">
+      <h2>{{produto.nome}}</h2>
+      <p><strong>Categoria:</strong> {{produto.categoria}}</p>
+      <p>{{produto.descricao}}</p>
+      <p><strong>Dono</strong> {{produto.usuarioId}}</p>
+    </div>
+  </div>
+   -->
