@@ -21,6 +21,7 @@ export class ProdutoListaComponent implements OnInit {
   produtos: any[] = [];
   produtosPorCategoria: ProdutoPorCategoria[] = [];
   loggedUserId: number | string | null = null;
+  isLoading: boolean = true;
 
   // Array de itens do carrossel
   carouselItems: CarouselItem[] = [
@@ -37,9 +38,17 @@ export class ProdutoListaComponent implements OnInit {
 
   ngOnInit(): void {
     this.getLoggedUserId();
-    this.produtoService.getProdutos().subscribe(data => {
-      this.produtos = data;
-      this.agruparProdutosPorCategoria();
+    this.isLoading = true;
+    this.produtoService.getProdutos().subscribe({
+      next: (data) => {
+        this.produtos = data;
+        this.agruparProdutosPorCategoria();
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Erro ao carregar produtos:', error);
+        this.isLoading = false;
+      }
     });
   }
 

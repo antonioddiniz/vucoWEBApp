@@ -6,7 +6,7 @@
   </app-banner-carousel>
 
   <div class="produtos-container">
-    <ng-container *ngIf="produtosPorCategoria?.length; else loading">
+    <ng-container *ngIf="!isLoading && produtosPorCategoria?.length; else loading">
       
       <!-- Loop para cada categoria -->
       <div class="categoria-section" *ngFor="let categoriaGroup of produtosPorCategoria">
