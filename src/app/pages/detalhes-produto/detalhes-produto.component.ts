@@ -13,6 +13,7 @@ import { jwtDecode } from 'jwt-decode';
 export class DetalhesProdutoComponent implements OnInit {
   produto: any;
   loggedUserId: number | null = null;
+  nomeUsuario: string = 'Carregando...';
 
   constructor(
     private route: ActivatedRoute,
@@ -31,6 +32,19 @@ export class DetalhesProdutoComponent implements OnInit {
         (produto) => {
           this.produto = produto;
           console.log('Produto carregado:', this.produto);
+          
+          // Buscar nome do usuário pelo ID
+          if (this.produto.usuarioId) {
+            this.produtoService.getUsuarioById(this.produto.usuarioId).subscribe(
+              (usuario) => {
+                this.nomeUsuario = usuario?.nome || `Usuário ${this.produto.usuarioId}`;
+              },
+              (error) => {
+                console.error('Erro ao buscar usuário:', error);
+                this.nomeUsuario = `Usuário ${this.produto.usuarioId}`;
+              }
+            );
+          }
         },
         (error) => {
           console.error('Erro ao buscar detalhes do produto', error);
