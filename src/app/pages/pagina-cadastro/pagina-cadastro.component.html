@@ -1,12 +1,12 @@
-<form (submit)="registerUser()" style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; background-color: #f5f5f5;">
-    <div style="background-color: #004C99; padding: 2px; color: white">
-        <h1 style="margin-left: 5%; font-size:extra-large">Cadastro</h1>
+<form (submit)="registerUser()" class="form-cadastro">
+    <div class="header-cadastro">
+        <h1>Cadastro</h1>
     </div>
     
     <!-- Botão Google no topo -->
-    <div style="display: flex; flex-direction: column; align-items: center; margin: 30px 100px 20px;">
+    <div class="google-section">
         <button type="button" (click)="signUpWithGoogle()" class="btn-google">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 48 48" style="margin-right: 10px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 48 48" class="google-icon">
             <path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/>
             <path fill="#FF3D00" d="m6.306 14.691 6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/>
             <path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/>
@@ -15,64 +15,94 @@
           Cadastrar com Google
         </button>
         
-        <div style="width: 100%; text-align: center; margin: 20px 0;">
-          <span style="color: #666; font-size: 14px;">ou preencha os dados abaixo</span>
+        <div class="divider-text">
+          <span>ou preencha os dados abaixo</span>
         </div>
     </div>
     
    <div class="divContainer">
-    <div style="display: block; width:100%">
+    <div class="section-header">
         <h2>Dados Pessoais</h2>
     </div>
-        <div style="width:30%;">
+    
+    <div class="form-row">
+        <div class="form-field">
             <label class="inputLabel" for="cpf">CPF:</label>
-            <br>
-            <input class="inputBox" type="text" id="cpf" name="cpf" [(ngModel)]="cpf" required>
+            <input class="inputBox" type="text" id="cpf" name="cpf" [(ngModel)]="cpf" 
+                   (input)="formatarCPF($event)" 
+                   (blur)="validarCPFInput()" 
+                   [style.border-color]="cpfInvalido ? 'red' : ''" 
+                   placeholder="000.000.000-00"
+                   maxlength="14" required>
+            <span *ngIf="cpfInvalido" class="error-message">CPF inválido</span>
         </div>
-        <div style="width: 60%; margin-bottom: 2%">
+    </div>
+    
+    <div class="form-row">
+        <div class="form-field full-width">
             <label class="inputLabel" for="nome">Nome completo:</label>
             <input class="inputBox" type="text" id="nome" name="nome" [(ngModel)]="nome" required>
         </div>
-        
-        <div style="width:30%">
+    </div>
+    
+    <div class="form-row">
+        <div class="form-field">
             <label class="inputLabel" for="dataNascimento">Data de Nascimento:</label>
-            <input class="inputBox" type="date" id="dataNascimento" name="dataNascimento" [(ngModel)]="dataNascimento" required>
+            <input class="inputBox" type="date" id="dataNascimento" name="dataNascimento" [(ngModel)]="dataNascimento" 
+                   (ngModelChange)="validarIdadeInput()"
+                   (input)="validarIdadeInput()" 
+                   (change)="validarIdadeInput()" 
+                   (blur)="validarIdadeInput()"
+                   [style.border-color]="idadeInvalida ? 'red' : ''" required>
+            <span *ngIf="idadeInvalida" class="error-message">Você precisa ter 18 anos ou mais</span>
         </div>
-        <div style="width:30%">
+    </div>
+    
+    <div class="form-row">
+        <div class="form-field">
             <label class="inputLabel" for="email">Email:</label>
             <input class="inputBox" type="email" id="email" name="email" [(ngModel)]="email" required>
         </div>
-        <div style="width:30%">
+    </div>
+    
+    <div class="form-row">
+        <div class="form-field">
             <label class="inputLabel" for="telefone">Telefone:</label>
             <input class="inputBox" type="text" id="telefone" name="telefone" [(ngModel)]="telefone" required>
         </div>
-
-   </div>     
+    </div>
+   </div>
 
    <div class="divContainer">
-    <div style="display: block; width:100%">
+    <div class="section-header">
         <h2>Dados de endereço</h2>
     </div>
 
-    
-    <div style="width:70%">
-        <label class="inputLabel" for="endereco">Endereço:</label>
-        <input class="inputBox" type="text" id="endereco" name="endereco" [(ngModel)]="endereco" required>
+    <div class="form-row">
+        <div class="form-field full-width">
+            <label class="inputLabel" for="endereco">Endereço:</label>
+            <input class="inputBox" type="text" id="endereco" name="endereco" [(ngModel)]="endereco" required>
+        </div>
     </div>
     
-    <div style="width: 20%;">
-        <label class="inputLabel" for="cep">CEP:</label>
-        <input class="inputBox" type="text" id="cep" name="cep" [(ngModel)]="cep" required>
+    <div class="form-row">
+        <div class="form-field">
+            <label class="inputLabel" for="cep">CEP:</label>
+            <input class="inputBox" type="text" id="cep" name="cep" [(ngModel)]="cep" required>
+        </div>
     </div>
     
-    <div style="width: 30%;">
-        <label class="inputLabel" for="cidade">Cidade:</label>
-        <input class="inputBox" type="text" id="cidade" name="cidade" [(ngModel)]="cidade" required>
+    <div class="form-row">
+        <div class="form-field">
+            <label class="inputLabel" for="cidade">Cidade:</label>
+            <input class="inputBox" type="text" id="cidade" name="cidade" [(ngModel)]="cidade" required>
+        </div>
     </div>
     
-    <div>
-        <label class="inputLabel" for="estado">Estado:</label>
-        <select class="inputBox" id="estado" name="estado" [(ngModel)]="estado" required>
+    <div class="form-row">
+        <div class="form-field">
+            <label class="inputLabel" for="estado">Estado:</label>
+            <select class="inputBox" id="estado" name="estado" [(ngModel)]="estado" required>
             <option value="AC">AC</option>
             <option value="AL">AL</option>
             <option value="AP">AP</option>
@@ -101,39 +131,41 @@
             <option value="SE">SE</option>
             <option value="TO">TO</option>
         </select>
+        </div>
     </div>
     
-    
-    <div>
-        <label class="inputLabel" for="pais">País:</label>
-        <input class="inputBox" type="text" id="pais" name="pais" [(ngModel)]="pais" required>
+    <div class="form-row">
+        <div class="form-field">
+            <label class="inputLabel" for="pais">País:</label>
+            <input class="inputBox" type="text" id="pais" name="pais" [(ngModel)]="pais" required>
+        </div>
     </div>
-    </div>
+   </div>
 
     
 
 
 
 
-    <!-- pagina-cadastro.component.html -->
-<div class="divContainer">
-    <div style="display: block; width:100%">
+   <div class="divContainer">
+    <div class="section-header">
       <h2>Definição de senha</h2>
     </div>
 
-    <div style="display: flex; justify-content: space-between; width: 100%;">
-        <div style="flex: 1; margin-right: 10px; ">
+    <div class="form-row">
+        <div class="form-field">
           <label class="inputLabel" for="senha">Senha:</label>
           <input class="inputBox" type="password" id="senha" name="senha" [(ngModel)]="senha" required>
         </div>
-        <div style="flex: 1; margin-left: 10px; ">
+    </div>
+    
+    <div class="form-row">
+        <div class="form-field">
           <label class="inputLabel" for="confirmaSenha">Confirme a Senha:</label>
           <input class="inputBox" type="password" id="confirmaSenha" name="confirmaSenha" [(ngModel)]="confirmaSenha" required>
         </div>
     </div>
-      
-
-  </div>
+   </div>
   
     <!-- <div class="divContainer">
         <div style="display: block; width:100%">
@@ -164,11 +196,11 @@
         <input class="inputBox" type="text" id="foto" name="foto" [(ngModel)]="foto" required>
     </div> -->
     
-    <div style="display: flex; flex-direction: column; align-items: center; margin:50px 100px;">
+    <div class="button-container">
         <button type="submit" class="btn-primary">
           Cadastrar
         </button>
-      </div>
+    </div>
       
 
 

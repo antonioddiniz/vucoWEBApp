@@ -45,6 +45,12 @@ export class TransacoesRecebidasComponent implements OnInit {
     
     this.transacaoService.getTransacoesByUsuarioByStatus(status).subscribe({
       next: (transacoes) => {
+        // Se não houver transações, limpa o array
+        if (!transacoes || transacoes.length === 0) {
+          this.transacoes = [];
+          return;
+        }
+
         const transacoesComProdutos = transacoes.map(async (transacao: any) => {
           const [produto1, produto2] = await Promise.all([
             this.produtoService.getProdutoById(transacao.produtoUsuario1Id).toPromise(),
@@ -59,11 +65,23 @@ export class TransacoesRecebidasComponent implements OnInit {
         });
 
         Promise.all(transacoesComProdutos).then((completas) => {
-          this.transacoes = completas;
+          // Ordena por data mais recente primeiro
+          this.transacoes = completas.sort((a, b) => {
+            const dataA = new Date(a.dataTransacao).getTime();
+            const dataB = new Date(b.dataTransacao).getTime();
+            return dataB - dataA; // Ordem decrescente (mais recente primeiro)
+          });
         });
       },
       error: (error) => {
-        console.error('Erro ao carregar transações:', error);
+        // Se for erro 404, significa que não há transações com esse status
+        if (error.status === 404) {
+          console.log('Nenhuma transação encontrada com status:', status);
+          this.transacoes = [];
+        } else {
+          console.error('Erro ao carregar transações:', error);
+          this.transacoes = [];
+        }
       }
     });
   }
@@ -145,18 +163,18 @@ export class TransacoesRecebidasComponent implements OnInit {
     if (this.transacaoSelecionada) {
       const transacaoAtualizada = {
         ...this.transacaoSelecionada,
-        status: 3 // status 1 = Concluída
+        status: 3 // status 3 = Cancelada
       };
 
       this.transacaoService.atualizarTransacao(transacaoAtualizada).subscribe({
         next: () => {
-          console.log('Transação aceita com sucesso!');
+          console.log('Transação cancelada com sucesso!');
           this.mostrarDeletar = false;
           this.carregarTransacoes(this.statusSelecionado); // Atualiza a lista de transações
         },
         error: (error) => {
-          console.error('Erro ao aceitar transação:', error);
-          this.mostrarConfirmacao = false;
+          console.error('Erro ao cancelar transação:', error);
+          this.mostrarDeletar = false;
         }
       });
     }

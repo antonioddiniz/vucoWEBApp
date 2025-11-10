@@ -141,4 +141,108 @@ export class ProdutoListaComponent implements OnInit {
       img.src = 'assets/placeholder.png';
     }
   }
+
+  getCategoriaIcon(categoria: string): string {
+    const categoriaLower = categoria.toLowerCase();
+    
+    // Mapeamento de categorias para ícones do Material Icons
+    const iconMap: { [key: string]: string } = {
+      // Eletrônicos
+      'eletrônicos': 'devices',
+      'eletronicos': 'devices',
+      'eletrônico': 'devices',
+      'eletronico': 'devices',
+      'tecnologia': 'computer',
+      'celular': 'smartphone',
+      'celulares': 'smartphone',
+      'computador': 'computer',
+      'computadores': 'computer',
+      'notebook': 'laptop_mac',
+      'tablets': 'tablet_mac',
+      'tablet': 'tablet_mac',
+      'console': 'sports_esports',
+      'games': 'sports_esports',
+      'jogos': 'sports_esports',
+      
+      // Moda e vestuário
+      'roupa': 'checkroom',
+      'roupas': 'checkroom',
+      'vestuário': 'checkroom',
+      'vestuario': 'checkroom',
+      'moda': 'style',
+      'calçados': 'square_foot',
+      'calcados': 'square_foot',
+      'sapato': 'square_foot',
+      'sapatos': 'square_foot',
+      'acessórios': 'watch',
+      'acessorios': 'watch',
+      
+      // Casa e decoração
+      'casa': 'home',
+      'móveis': 'chair',
+      'moveis': 'chair',
+      'decoração': 'palette',
+      'decoracao': 'palette',
+      'cozinha': 'kitchen',
+      'jardim': 'yard',
+      
+      // Esportes e lazer
+      'esporte': 'fitness_center',
+      'esportes': 'fitness_center',
+      'bicicleta': 'directions_bike',
+      'bicicletas': 'directions_bike',
+      'fitness': 'fitness_center',
+      'camping': 'forest',
+      
+      // Livros e mídia
+      'livro': 'menu_book',
+      'livros': 'menu_book',
+      'música': 'library_music',
+      'musica': 'library_music',
+      'filme': 'movie',
+      'filmes': 'movie',
+      
+      // Veículos
+      'carro': 'directions_car',
+      'carros': 'directions_car',
+      'moto': 'two_wheeler',
+      'motos': 'two_wheeler',
+      'veículo': 'directions_car',
+      'veiculo': 'directions_car',
+      
+      // Bebês e crianças
+      'bebê': 'child_care',
+      'bebe': 'child_care',
+      'criança': 'toys',
+      'crianca': 'toys',
+      'brinquedo': 'toys',
+      'brinquedos': 'toys',
+      
+      // Animais
+      'pet': 'pets',
+      'pets': 'pets',
+      'animal': 'pets',
+      'animais': 'pets',
+      
+      // Outros
+      'ferramenta': 'build',
+      'ferramentas': 'build',
+      'arte': 'brush',
+      'instrumento': 'piano',
+      'instrumentos': 'piano',
+      'beleza': 'spa',
+      'saúde': 'favorite',
+      'saude': 'favorite',
+    };
+    
+    // Busca por correspondência exata ou parcial
+    for (const [key, icon] of Object.entries(iconMap)) {
+      if (categoriaLower.includes(key)) {
+        return icon;
+      }
+    }
+    
+    // Ícone padrão se não encontrar correspondência
+    return 'category';
+  }
 }

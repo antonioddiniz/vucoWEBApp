@@ -21,7 +21,7 @@
         <!-- Header da categoria com ícone -->
         <div class="categoria-header">
           <div class="categoria-title-wrapper">
-            <mat-icon class="categoria-icon">category</mat-icon>
+            <mat-icon class="categoria-icon">{{ getCategoriaIcon(categoriaGroup.categoria) }}</mat-icon>
             <h2 class="categoria-title">{{ categoriaGroup.categoria }}</h2>
             <span class="produto-count">{{ categoriaGroup.produtos.length }} {{ categoriaGroup.produtos.length === 1 ? 'produto' : 'produtos' }}</span>
           </div>
@@ -46,7 +46,7 @@
                 </div>
                 <!-- Badge de categoria na imagem -->
                 <div class="produto-badge">
-                  <mat-icon class="badge-icon">category</mat-icon>
+                  <mat-icon class="badge-icon">{{ getCategoriaIcon(produto.categoria) }}</mat-icon>
                   <span>{{ produto.categoria }}</span>
                 </div>
               </div>

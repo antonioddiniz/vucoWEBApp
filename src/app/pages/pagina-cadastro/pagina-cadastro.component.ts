@@ -27,6 +27,10 @@ export class PaginaCadastroComponent {
   status: string = '';
   dataCadastro: string = new Date(Date.now()).toISOString();
   dataAlteracao: string = new Date(Date.now()).toISOString();
+  
+  // Flags para validação visual
+  cpfInvalido: boolean = false;
+  idadeInvalida: boolean = false;
 
   constructor(
     private cadastroUsuarioService: CadastroUsuarioService,
@@ -98,6 +102,45 @@ export class PaginaCadastroComponent {
     }
 
     return idade >= 18;
+  }
+
+  // Validação em tempo real do CPF
+  validarCPFInput() {
+    if (this.cpf && this.cpf.trim() !== '') {
+      this.cpfInvalido = !this.validarCPF(this.cpf);
+    } else {
+      this.cpfInvalido = false;
+    }
+  }
+
+  // Validação em tempo real da idade
+  validarIdadeInput() {
+    if (this.dataNascimento && this.dataNascimento.trim() !== '') {
+      this.idadeInvalida = !this.validarIdade();
+    } else {
+      this.idadeInvalida = false;
+    }
+  }
+
+  // Máscara para CPF
+  formatarCPF(event: any) {
+    let valor = event.target.value.replace(/\D/g, '');
+    
+    if (valor.length <= 11) {
+      valor = valor.replace(/(\d{3})(\d)/, '$1.$2');
+      valor = valor.replace(/(\d{3})(\d)/, '$1.$2');
+      valor = valor.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+      this.cpf = valor;
+    }
+    
+    // Valida apenas se o CPF estiver completo (11 dígitos)
+    const apenasNumeros = this.cpf.replace(/\D/g, '');
+    if (apenasNumeros.length === 11) {
+      this.validarCPFInput();
+    } else if (apenasNumeros.length > 0) {
+      // Se estiver digitando, não mostra erro ainda
+      this.cpfInvalido = false;
+    }
   }
 
   registerUser() {
