@@ -43,9 +43,82 @@ export class PaginaCadastroComponent {
     return true;
   }
 
+  validarCPF(cpf: string): boolean {
+    // Remove caracteres não numéricos
+    cpf = cpf.replace(/[^\d]/g, '');
+
+    // Verifica se tem 11 dígitos
+    if (cpf.length !== 11) {
+      return false;
+    }
+
+    // Verifica se todos os dígitos são iguais
+    if (/^(\d)\1{10}$/.test(cpf)) {
+      return false;
+    }
+
+    // Valida os dígitos verificadores
+    let soma = 0;
+    let resto;
+
+    // Valida primeiro dígito
+    for (let i = 1; i <= 9; i++) {
+      soma += parseInt(cpf.substring(i - 1, i)) * (11 - i);
+    }
+    resto = (soma * 10) % 11;
+    if (resto === 10 || resto === 11) resto = 0;
+    if (resto !== parseInt(cpf.substring(9, 10))) return false;
+
+    // Valida segundo dígito
+    soma = 0;
+    for (let i = 1; i <= 10; i++) {
+      soma += parseInt(cpf.substring(i - 1, i)) * (12 - i);
+    }
+    resto = (soma * 10) % 11;
+    if (resto === 10 || resto === 11) resto = 0;
+    if (resto !== parseInt(cpf.substring(10, 11))) return false;
+
+    return true;
+  }
+
+  validarIdade(): boolean {
+    if (!this.dataNascimento) {
+      return false;
+    }
+
+    const hoje = new Date();
+    const nascimento = new Date(this.dataNascimento);
+    let idade = hoje.getFullYear() - nascimento.getFullYear();
+    const mesAtual = hoje.getMonth();
+    const mesNascimento = nascimento.getMonth();
+
+    // Ajusta a idade se ainda não fez aniversário este ano
+    if (mesAtual < mesNascimento || (mesAtual === mesNascimento && hoje.getDate() < nascimento.getDate())) {
+      idade--;
+    }
+
+    return idade >= 18;
+  }
+
   registerUser() {
-    if (this.verificarSenhas()) {
-      const usuario = {
+    // Valida CPF
+    if (!this.validarCPF(this.cpf)) {
+      alert('CPF inválido. Por favor, verifique o número informado.');
+      return;
+    }
+
+    // Valida idade
+    if (!this.validarIdade()) {
+      alert('É necessário ter 18 anos ou mais para se cadastrar.');
+      return;
+    }
+
+    // Valida senhas
+    if (!this.verificarSenhas()) {
+      return;
+    }
+
+    const usuario = {
         nome: this.nome,
         email: this.email,
         dataNascimento: this.dataNascimento,
@@ -77,7 +150,6 @@ export class PaginaCadastroComponent {
           alert('Erro ao cadastrar usuário. Tente novamente.');
         }
       );
-    }
   }
 
   async signUpWithGoogle(): Promise<void> {
