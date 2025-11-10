@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { AuthService } from './auth.service';
+import { environment } from '../../environments/environment';
 
 interface Produto {
   id: number;
@@ -20,7 +21,7 @@ interface Produto {
   providedIn: 'root'
 })
 export class ListarProdutosUsuarioService {
-  private apiUrl = 'http://localhost:5074/v1/produtos/usuario';
+  private apiUrl = `${environment.apiUrl}/v1/produtos/usuario`;
 
   constructor(
     private http: HttpClient,

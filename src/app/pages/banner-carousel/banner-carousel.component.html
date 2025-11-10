@@ -1,0 +1,16 @@
+<div class="horizontal-carousel">
+  <div class="carousel-container" [style.--preferred-width]="preferredItemWidth + 'px'" [style.--max-small-width]="maxSmallItemWidth + 'px'">
+    <div 
+      class="carousel-item" 
+      *ngFor="let item of items"
+      [style.width]="preferredItemWidth + 'px'"
+    >
+      <img 
+        [src]="item.imageSrc" 
+        [alt]="item.contentDescription || 'Carousel image ' + item.id"
+        class="carousel-image"
+        (error)="onImageError($event)"
+      />
+    </div>
+  </div>
+</div>

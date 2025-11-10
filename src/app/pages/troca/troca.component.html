@@ -1,0 +1,44 @@
+<div class="troca-container">
+  <h2 class="troca-title">Oferecer Troca</h2>
+
+  <!-- Produto que o usuário deseja -->
+  <div class="produto-section">
+    <h3 class="section-title">Produto Desejado</h3>
+    <div class="produto-card" *ngIf="produtoDesejado">
+      <img [src]="produtoDesejado.imagem" [alt]="produtoDesejado.nome" class="produto-image">
+      <div class="produto-info">
+        <h4>{{ produtoDesejado.nome }}</h4>
+      </div>
+    </div>
+    <p *ngIf="!produtoDesejado" class="empty-message">Nenhum produto selecionado.</p>
+  </div>
+
+  <!-- Produto que o usuário está oferecendo -->
+  <div class="produto-section">
+    <h3 class="section-title">Selecione seu produto para trocar</h3>
+    <div class="itens-list">
+      <div 
+        class="item-card" 
+        *ngFor="let item of meusItens"
+        [class.selected]="meuItemSelecionado?.id === item.id"
+        (click)="selecionarMeuItem(item)">
+        <img [src]="item.imagem" [alt]="item.nome" class="item-image">
+        <div class="item-info">
+          <span class="item-name">{{ item.nome }}</span>
+          <span *ngIf="meuItemSelecionado?.id === item.id" class="selected-badge">Selecionado</span>
+        </div>
+      </div>
+    </div>
+    <p *ngIf="meusItens.length === 0" class="empty-message">Você não possui produtos cadastrados.</p>
+  </div>
+
+  <!-- Botão para submeter a proposta -->
+  <div class="actions-section">
+    <button 
+      class="submit-btn" 
+      (click)="submeterProposta()"
+      [disabled]="!meuItemSelecionado || !produtoDesejado">
+      Enviar Proposta de Troca
+    </button>
+  </div>
+</div>

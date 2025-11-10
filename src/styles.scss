@@ -2,3 +2,93 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+/* styles.css */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    background: white;
+    padding: 24px;
+    border-radius: 8px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+  }
+  
+  .modal-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-around;
+  }
+
+  .btn-aceitar {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+    margin: 20px;
+  }
+  
+  .btn-aceitar:hover {
+    background-color: #388e3c;
+  }
+
+  .btn-recusar {
+    background-color: #f44336;
+    color: white;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+    margin: 20px;
+  }
+  .btn-recusar:hover {
+    background-color: #d32f2f;
+  }
+
+  .btn-contraproposta{
+    background-color: #007bff;
+    color: white;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .botoes-transacao {
+    display: flex;
+    justify-content: center; /* centraliza horizontalmente */
+    align-items: center;     /* alinha verticalmente se necessário */
+    gap: 16px;               /* espaço entre os botões */
+    margin-top: 12px;
+  }
+
+  .produto img {
+    width: 100%;
+    height: auto;
+    border-radius: 18px;
+    height: 300px;
+    width: 100%;
+
+  }

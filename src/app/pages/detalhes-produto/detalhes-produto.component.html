@@ -1,30 +1,77 @@
 <div class="produto-detalhes-container" *ngIf="produto">
-    
-    <mat-card class="produto-detalhes-card">
-        <mat-card-actions>
-            <button mat-button routerLink="/lista-produto">Voltar</button>
-          </mat-card-actions>
-      <div class="produto-imagem">
-        <img [src]="produto.imagem" alt="{{ produto.nome }}">
+  <mat-card class="produto-detalhes-card">
+    <!-- Header com botão voltar -->
+    <div class="header-actions">
+      <button mat-icon-button routerLink="/lista-produto" class="back-button">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+    </div>
+
+    <!-- Imagem do produto -->
+    <div class="produto-imagem-container">
+      <img 
+        [src]="produto.imagem" 
+        [alt]="produto.nome"
+        (error)="onImageError($event)"
+        class="produto-imagem"
+      />
+    </div>
+
+    <mat-card-content class="produto-content">
+      <!-- Título e categoria -->
+      <div class="produto-header">
+        <h1 class="produto-titulo">{{ produto.nome }}</h1>
+        <div class="categoria-badge">
+          <mat-icon class="category-icon">category</mat-icon>
+          <span>{{ produto.categoria }}</span>
+        </div>
       </div>
-      <mat-card-content>
-        <h1 mat-card-title>{{ produto.nome }}</h1>
-        <p mat-card-subtitle><strong>Categoria:</strong> {{ produto.categoria }}</p>
-        <p>{{ produto.descricao }}</p>
-        <p><strong>Data de Criação:</strong> {{ produto.dataDeCriacao | date }}</p>
-        <p><strong>Status:</strong>
-          <span *ngIf="produto.status === 1">Disponível</span>
-          <span *ngIf="produto.status === 2">Indisponível</span>
-      </p>
-      <p><strong>Dono:</strong> {{ produto.usuarioId }}</p>
 
-            </mat-card-content>
+      <!-- Status badge -->
+      <div class="status-container">
+        <span [class]="'status-badge status-' + (produto.status === 1 ? 'disponivel' : 'indisponivel')">
+          <mat-icon class="status-icon">{{ produto.status === 1 ? 'check_circle' : 'cancel' }}</mat-icon>
+          <span>{{ produto.status === 1 ? 'Disponível' : 'Indisponível' }}</span>
+        </span>
+      </div>
 
-    </mat-card>
-  </div>
-  
-  <!-- Opcional: Exibir uma mensagem de carregamento enquanto o produto está sendo carregado -->
-  <div *ngIf="!produto">
-    <p>Carregando detalhes do produto...</p>
-  </div>
-  
+      <!-- Descrição -->
+      <div class="descricao-section">
+        <h3 class="section-title">Descrição</h3>
+        <p class="descricao-texto">{{ produto.descricao }}</p>
+      </div>
+
+      <!-- Informações adicionais -->
+      <div class="info-section">
+        <div class="info-item">
+          <mat-icon class="info-icon">calendar_today</mat-icon>
+          <div class="info-content">
+            <span class="info-label">Data de Criação</span>
+            <span class="info-value">{{ produto.dataDeCriacao | date:'dd/MM/yyyy' }}</span>
+          </div>
+        </div>
+        <div class="info-item">
+          <mat-icon class="info-icon">person</mat-icon>
+          <div class="info-content">
+            <span class="info-label">Dono do Produto</span>
+            <span class="info-value">Usuário {{ produto.usuarioId }}</span>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+
+    <!-- Botão para oferecer troca -->
+    <mat-card-actions class="produto-actions" *ngIf="!isProdutoDoUsuario(produto)">
+      <button mat-raised-button class="troca-button" (click)="oferecerTroca()">
+        <mat-icon>swap_horiz</mat-icon>
+        <span>Oferecer Troca</span>
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>
+
+<!-- Exibir mensagem de carregamento enquanto o produto está sendo carregado -->
+<div class="loading-container" *ngIf="!produto">
+  <mat-spinner></mat-spinner>
+  <p>Carregando detalhes do produto...</p>
+</div>

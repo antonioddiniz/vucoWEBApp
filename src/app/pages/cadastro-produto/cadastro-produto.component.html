@@ -1,86 +1,165 @@
-<div class="form-container">
-  <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
-    <mat-form-field appearance="fill">
-      <mat-label>Nome</mat-label>
-      <input matInput id="nome" formControlName="nome" type="text" />
-    </mat-form-field>
-
-    <mat-form-field appearance="fill">
-      <mat-label>Descrição</mat-label>
-      <input matInput id="descricao" formControlName="descricao" type="text" />
-    </mat-form-field>
-
-    <mat-form-field appearance="fill">
-      <mat-label>Categoria</mat-label>
-      <mat-select id="categoria" formControlName="categoria">
-        <mat-option value="Eletrônicos">Eletrônicos</mat-option>
-        <mat-option value="Informática">Informática</mat-option>
-        <mat-option value="Casa">Casa</mat-option>
-        <mat-option value="Decoração">Decoração</mat-option>
-        <mat-option value="Jardinagem">Jardinagem</mat-option>
-        <mat-option value="Ferramentas">Ferramentas</mat-option>
-        <mat-option value="Infantil">Infantil</mat-option>
-        <mat-option value="Vestuário">Vestuário</mat-option>
-        <mat-option value="Alimentos">Alimentos</mat-option>
-        <mat-option value="Brinquedos">Brinquedos</mat-option>
-        <mat-option value="Móveis">Móveis</mat-option>
-        <mat-option value="Beleza">Beleza</mat-option>
-        <mat-option value="Automóveis">Automóveis</mat-option>
-        <mat-option value="Esportes">Esportes</mat-option>
-        <mat-option value="Livros">Livros</mat-option>
-        <mat-option value="Música">Música</mat-option>
-      </mat-select>
-    </mat-form-field>
-
-    <div>
-      <label for="imagem">Imagem</label>
-      <input id="imagem" type="file" (change)="onFileChange($event)" />
+<div class="page-container">
+  <div class="form-container">
+    <!-- Header -->
+    <div class="form-header">
+      <button mat-icon-button class="back-button" routerLink="/lista-produto">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <div class="header-content">
+        <mat-icon class="header-icon">add_circle</mat-icon>
+        <h2 class="page-title">Cadastrar Produto</h2>
+      </div>
     </div>
 
-    <button mat-raised-button color="primary" type="submit">Cadastrar Produto</button>
-  </form>
+    <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="product-form">
+      
+      <!-- Seção de Imagem -->
+      <div class="image-section">
+        <label class="section-label">
+          <mat-icon>image</mat-icon>
+          <span>Imagem do Produto</span>
+        </label>
+        
+        <div class="image-upload-container">
+          <div class="image-preview-wrapper" *ngIf="base64Image; else noImage">
+            <img [src]="base64Image" alt="Preview" class="preview-image" />
+            <button 
+              type="button"
+              class="remove-image-button"
+              (click)="removeImage()">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+          
+          <ng-template #noImage>
+            <div class="image-placeholder">
+              <mat-icon class="placeholder-icon">add_photo_alternate</mat-icon>
+              <p>Nenhuma imagem selecionada</p>
+            </div>
+          </ng-template>
+        </div>
+        
+        <input 
+          id="imagem" 
+          type="file" 
+          accept="image/*"
+          (change)="onFileChange($event)"
+          class="file-input"
+          #fileInput
+        />
+        <button 
+          type="button"
+          mat-stroked-button 
+          class="upload-button"
+          (click)="fileInput.click()">
+          <mat-icon>upload</mat-icon>
+          <span>{{ base64Image ? 'Alterar Imagem' : 'Selecionar Imagem' }}</span>
+        </button>
+        
+        <div class="error-message" *ngIf="productForm.get('imagem')?.invalid && productForm.get('imagem')?.touched">
+          <mat-icon>error</mat-icon>
+          <span>Imagem é obrigatória</span>
+        </div>
+      </div>
+
+      <!-- Informações Básicas -->
+      <div class="form-section">
+        <label class="section-label">
+          <mat-icon>info</mat-icon>
+          <span>Informações Básicas</span>
+        </label>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Nome do Produto</mat-label>
+          <input 
+            matInput 
+            formControlName="nome" 
+            placeholder="Ex: Notebook Dell Inspiron"
+            maxlength="100"
+          />
+          <mat-icon matPrefix>title</mat-icon>
+          <mat-hint>{{ productForm.get('nome')?.value?.length || 0 }}/100</mat-hint>
+          <mat-error *ngIf="productForm.get('nome')?.hasError('required')">
+            Nome é obrigatório
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Descrição</mat-label>
+          <textarea 
+            matInput 
+            formControlName="descricao" 
+            placeholder="Descreva seu produto em detalhes..."
+            rows="4"
+            maxlength="500"
+          ></textarea>
+          <mat-icon matPrefix>description</mat-icon>
+          <mat-hint>{{ productForm.get('descricao')?.value?.length || 0 }}/500</mat-hint>
+          <mat-error *ngIf="productForm.get('descricao')?.hasError('required')">
+            Descrição é obrigatória
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- Categoria -->
+      <div class="form-section">
+        <label class="section-label">
+          <mat-icon>category</mat-icon>
+          <span>Categoria</span>
+        </label>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Selecione a Categoria</mat-label>
+          <mat-select formControlName="categoria">
+            <mat-option value="Eletrônicos">
+              <mat-icon>devices</mat-icon>
+              <span>Eletrônicos</span>
+            </mat-option>
+            <mat-option value="Informática">Informática</mat-option>
+            <mat-option value="Casa">Casa</mat-option>
+            <mat-option value="Decoração">Decoração</mat-option>
+            <mat-option value="Jardinagem">Jardinagem</mat-option>
+            <mat-option value="Ferramentas">Ferramentas</mat-option>
+            <mat-option value="Infantil">Infantil</mat-option>
+            <mat-option value="Vestuário">Vestuário</mat-option>
+            <mat-option value="Alimentos">Alimentos</mat-option>
+            <mat-option value="Brinquedos">Brinquedos</mat-option>
+            <mat-option value="Móveis">Móveis</mat-option>
+            <mat-option value="Beleza">Beleza</mat-option>
+            <mat-option value="Automóveis">Automóveis</mat-option>
+            <mat-option value="Esportes">Esportes</mat-option>
+            <mat-option value="Livros">Livros</mat-option>
+            <mat-option value="Música">Música</mat-option>
+          </mat-select>
+          <mat-icon matPrefix>category</mat-icon>
+          <mat-error *ngIf="productForm.get('categoria')?.hasError('required')">
+            Categoria é obrigatória
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- Botões de Ação -->
+      <div class="form-actions">
+        <button 
+          mat-stroked-button 
+          type="button"
+          (click)="cancel()"
+          class="cancel-button">
+          <mat-icon>close</mat-icon>
+          <span>Cancelar</span>
+        </button>
+        
+        <button 
+          mat-raised-button 
+          color="primary" 
+          type="submit"
+          [disabled]="productForm.invalid || !base64Image || isSubmitting"
+          class="submit-button">
+          <mat-spinner *ngIf="isSubmitting" diameter="20" class="button-spinner"></mat-spinner>
+          <mat-icon *ngIf="!isSubmitting">check_circle</mat-icon>
+          <span>{{ isSubmitting ? 'Cadastrando...' : 'Cadastrar Produto' }}</span>
+        </button>
+      </div>
+    </form>
+  </div>
 </div>
-
-
-
-
-<!-- 
-
-<form [formGroup]="productForm" (ngSubmit)="onSubmit()">
-  <div>
-    <label for="nome">Nome:</label>
-    <input id="nome" formControlName="nome" type="text" />
-  </div>
-  <div>
-    <label for="descricao">Descrição:</label>
-    <input id="descricao" formControlName="descricao" type="text" />
-  </div>
-  <div>
-    <label for="categoria">Categoria:</label>
-    <select id="categoria" formControlName="categoria">
-      <option value="Eletrônicos">Eletrônicos</option>
-      <option value="Informática">Informática</option>
-      <option value="Casa">Casa</option>
-      <option value="Decoração">Decoração</option>
-      <option value="Jardinagem">Jardinagem</option>
-      <option value="Ferramentas">Ferramentas</option>
-      <option value="Infantil">Infantil</option>
-      <option value="Vestuário">Vestuário</option>
-      <option value="Alimentos">Alimentos</option>
-      <option value="Brinquedos">Brinquedos</option>
-      <option value="Móveis">Móveis</option>
-      <option value="Beleza">Beleza</option>
-      <option value="Automóveis">Automóveis</option>
-      <option value="Esportes">Esportes</option>
-      <option value="Livros">Livros</option>
-      <option value="Música">Música</option>
-    </select>
-  </div>
-  
-  
-  <div>
-    <label for="imagem">Imagem:</label>
-    <input id="imagem" type="file" (change)="onFileChange($event)" />
-  </div>
-  <button type="submit">Cadastrar Produto</button>
-</form> -->

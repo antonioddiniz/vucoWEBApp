@@ -1,0 +1,108 @@
+<!-- transacoes.component.html -->
+<div class="transacoes-container">
+  <h2 class="page-title">Minhas Transações</h2>
+
+  <!-- Abas de status -->
+  <div class="tabs-wrapper">
+    <div class="tabs">
+      <button [class.active]="statusSelecionado === 2" (click)="selecionarStatus(2)">
+        Pendentes
+      </button>
+      <button [class.active]="statusSelecionado === 1" (click)="selecionarStatus(1)">
+        Concluídas
+      </button>
+      <button [class.active]="statusSelecionado === 3" (click)="selecionarStatus(3)">
+        Canceladas
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="transacoes.length === 0" class="sem-transacoes">
+    Nenhuma transação encontrada para este status.
+  </div>
+
+  <div class="transacoes-grid">
+    <div *ngFor="let transacao of transacoes" class="transacao-card">
+      <div class="produtos">
+        <div class="produto produto-enviado">
+          <img 
+            [src]="transacao.produtoUsuario1?.imagem" 
+            [alt]="transacao.produtoUsuario1?.nome"
+            (error)="onImageError($event)"
+          />
+          <div class="produto-info">
+            <p class="produto-nome"><strong>{{ transacao.produtoUsuario1?.nome }}</strong></p>
+            <p class="produto-usuario">De: Usuário {{ transacao.idUsuario1 }}</p>
+          </div>
+        </div>
+
+        <div class="troca-icon">⇄</div>
+
+        <div class="produto produto-recebido">
+          <img 
+            [src]="transacao.produtoUsuario2?.imagem" 
+            [alt]="transacao.produtoUsuario2?.nome"
+            (error)="onImageError($event)"
+          />
+          <div class="produto-info">
+            <p class="produto-nome"><strong>{{ transacao.produtoUsuario2?.nome }}</strong></p>
+            <p class="produto-usuario">Para: Você</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="transacao-info">
+        <p class="info-item">
+          <strong>Data:</strong> 
+          <span>{{ transacao.dataTransacao | date:'dd/MM/yyyy HH:mm' }}</span>
+        </p>
+        <p class="info-item">
+          <strong>Status:</strong> 
+          <span [ngSwitch]="transacao.status" class="status-badge">
+            <span *ngSwitchCase="1" class="status-concluida">Concluída</span>
+            <span *ngSwitchCase="2" class="status-pendente">Pendente</span>
+            <span *ngSwitchCase="3" class="status-cancelada">Cancelada</span>
+            <span *ngSwitchCase="4" class="status-estornada">Estornada</span>
+            <span *ngSwitchDefault>Desconhecido</span>
+          </span>
+        </p>
+      </div>
+
+      <div class="botoes-transacao" *ngIf="statusSelecionado === 2">
+        <button class="btn-aceitar" (click)="abrirConfirmacao(transacao)">
+          Aceitar
+        </button>
+        <button class="btn-contraproposta" (click)="oferecerTroca(transacao)">
+          Contraproposta
+        </button>
+        <button class="btn-recusar" (click)="abrirDeletar(transacao)">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Confirmação -->
+<div class="modal" *ngIf="mostrarConfirmacao" (click)="cancelarConfirmacao()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <h3>Confirmar Aceite</h3>
+    <p>Tem certeza que deseja aceitar esta transação?</p>
+    <div class="modal-actions">
+      <button class="btn-aceitar" (click)="confirmarAceite()">Confirmar</button>
+      <button class="btn-recusar" (click)="cancelarConfirmacao()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Cancelamento -->
+<div class="modal" *ngIf="mostrarDeletar" (click)="cancelarDeletar()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <h3>Confirmar Cancelamento</h3>
+    <p>Tem certeza que deseja cancelar esta transação?</p>
+    <div class="modal-actions">
+      <button class="btn-aceitar" (click)="confirmarDelete()">Confirmar</button>
+      <button class="btn-recusar" (click)="cancelarDeletar()">Cancelar</button>
+    </div>
+  </div>
+</div>

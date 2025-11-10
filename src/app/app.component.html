@@ -1,54 +1,103 @@
-<head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-</head>
-<header style="background-color: white; height: 100px; display: flex; align-items: center; justify-content: center; ">
-    <div class="logo" style="width: 20%; display: flex; align-items: center; justify-content: center;">
-        <img (click)="redirectToHome()" src="assets/vucologovermelhoazul.png" alt="Logo" style="max-height: 100px; max-width: 80%;" />
-    </div>
-    <div class="search-bar" style="width: 50%; display: flex; align-items: center; justify-content: flex-start;">
-        <input type="text" placeholder="Buscar sua troca do dia..." style="border: 1px solid black; height:2rem; border-radius: 0.4rem; width:80%;" />
-        <button style="border: 1px solid black; height:2.2rem; border-radius: 0.4rem; background-color: white; width:50px ">
-            <i class="fas fa-search"></i>
-        </button>
-    </div>
-    <div class="account-buttons" style="width: 30%; align-items: center; display:flex;">
-        
-      <ng-container *ngIf="!isAuthenticated()">
-        <button (click)="redirectToLogin()" class="button-escuro">
-          Entrar
-        </button>
-      </ng-container>
+<header class="main-header">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-      <ng-container *ngIf="!isAuthenticated()">
-        <button (click)="redirectToCadastro()" class="button-claro">
-          Criar conta
-        </button>
-      </ng-container>
-      
-      <div style="display: flex;">
-        <ng-container *ngIf="isAuthenticated()">
-          <button (click)="redirectToCriarProduto()" class="button-escuro" style="width: 100px;">Desapegar</button>
-          <button (click)="navigateToMyProducts()" class="button-claro" style="width: 100%;">Meus produtos</button>
-        </ng-container>
-      </div>
-        
+    <div class="header-content">
+        <!-- Logo -->
+        <div class="logo-container">
+            <img 
+                (click)="redirectToHome()" 
+                src="assets/vucologovermelhoazul.png" 
+                alt="Logo Vuco" 
+                class="logo-image"
+            />
+        </div>
+
+        <!-- Search Bar -->
+        <div class="search-bar" [class.active]="searchActive">
+            <div class="search-input-wrapper">
+                <mat-icon class="search-icon">search</mat-icon>
+                <input 
+                    type="text"
+                    class="search-input"
+                    [(ngModel)]="searchQuery"
+                    (focus)="onSearchFocus()"
+                    (blur)="onSearchBlur()"
+                    (keyup.enter)="performSearch()"
+                    placeholder="Buscar produtos..."
+                />
+                <button 
+                    *ngIf="searchQuery" 
+                    class="clear-button"
+                    (click)="clearSearch()"
+                    type="button">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </div>
+            <button 
+                class="search-button"
+                (click)="performSearch()"
+                type="button"
+                [disabled]="!searchQuery">
+                <mat-icon>search</mat-icon>
+            </button>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <ng-container *ngIf="!isAuthenticated()">
+                <button (click)="redirectToLogin()" class="button-escuro">
+                    Entrar
+                </button>
+                <button (click)="redirectToCadastro()" class="button-claro">
+                    Criar conta
+                </button>
+            </ng-container>
+
+            <button 
+                *ngIf="isAuthenticated()" 
+                (click)="toggleMenu()" 
+                class="menu-button-icon">
+                <mat-icon>menu</mat-icon>
+            </button>
+        </div>
     </div>
-      
-    <button *ngIf="isAuthenticated()" (click)="logout()" class="logout-button">
-      <svg class="logout-icon" width="24" height="24" viewBox="0 0 24 24">
-          <path d="M 19.1893 12.75 L 9 12.75 C 8.58579 12.75 8.25 12.4142 8.25 12 C 8.25 11.5858 8.58579 11.25 9 11.25 L 19.1893 11.25 L 16.4697 8.53033 C 16.1768 8.23744 16.1768 7.76256 16.4697 7.46967 C 16.7626 7.17678 17.2374 7.17678 17.5303 7.46967 L 21.5303 11.4697 C 21.8232 11.7626 21.8232 12.2374 21.5303 12.5303 L 17.5303 16.5303 C 17.2374 16.8232 16.7626 16.8232 16.4697 16.5303 C 16.1768 16.2374 16.1768 15.7626 16.4697 15.4697 L 19.1893 12.75 L 19.1893 12.75 Z M 10 21.25 C 10.4142 21.25 10.75 21.5858 10.75 22 C 10.75 22.4142 10.4142 22.75 10 22.75 L 5 22.75 C 3.48122 22.75 2.25 21.5188 2.25 20 L 2.25 4 C 2.25 2.48122 3.48122 1.25 5 1.25 L 10 1.25 C 10.4142 1.25 10.75 1.58579 10.75 2 C 10.75 2.41421 10.4142 2.75 10 2.75 L 5 2.75 C 4.30964 2.75 3.75 3.30964 3.75 4 L 3.75 20 C 3.75 20.6904 4.30964 21.25 5 21.25 L 10 21.25 Z"></path>
-      </svg>
-  </button>
-  
 </header>
-<hr>
+
+<!-- Overlay do modal -->
+<div *ngIf="menuOpen" class="menu-overlay" (click)="closeMenu()"></div>
+
+<!-- Menu lateral (sidebar) -->
+<div class="menu-sidebar" [class.open]="menuOpen">
+    <div class="menu-header">
+        <h2>Menu</h2>
+        <button (click)="closeMenu()" class="close-button">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+    
+    <div class="menu-content">
+        <ng-container *ngIf="isAuthenticated()">
+            <button (click)="redirectToCriarProduto()" class="button-escuro menu-button">
+                <mat-icon>add_circle</mat-icon>
+                <span>Desapegar</span>
+            </button>
+            <button (click)="navigateToMyProducts()" class="button-claro menu-button">
+                <mat-icon>inventory</mat-icon>
+                <span>Meus produtos</span>
+            </button>
+            <button (click)="redirectToTroca()" class="button-claro menu-button">
+                <mat-icon>swap_horiz</mat-icon>
+                <span>Minhas trocas</span>
+            </button>
+            <button (click)="logout()" class="button-escuro menu-button logout-menu-button">
+                <mat-icon>logout</mat-icon>
+                <span>Sair</span>
+            </button>
+        </ng-container>
+    </div>
+</div>
 
 <router-outlet />
 
-<!-- <app-produto-lista></app-produto-lista> -->
-<!-- 
-<div style="max-width: 800px;">
-  <app-token-display></app-token-display>
 
-</div> -->
 

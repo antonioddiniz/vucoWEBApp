@@ -10,9 +10,46 @@ import { AuthService } from '../app/services/auth.service';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  constructor(private router: Router,
+  menuOpen: boolean = false;
+  searchQuery: string = '';
+  searchActive: boolean = false;
+
+  constructor(
+    private router: Router,
     private authService: AuthService
   ) { }
+
+  toggleMenu(): void {
+    this.menuOpen = !this.menuOpen;
+  }
+
+  closeMenu(): void {
+    this.menuOpen = false;
+  }
+
+  onSearchFocus(): void {
+    this.searchActive = true;
+  }
+
+  onSearchBlur(): void {
+    // Delay para permitir clique no botão de busca
+    setTimeout(() => {
+      this.searchActive = false;
+    }, 200);
+  }
+
+  performSearch(): void {
+    if (this.searchQuery.trim()) {
+      // Implemente sua lógica de busca aqui
+      console.log('Buscar:', this.searchQuery);
+      // Exemplo: this.router.navigate(['/busca'], { queryParams: { q: this.searchQuery } });
+    }
+  }
+
+  clearSearch(): void {
+    this.searchQuery = '';
+    this.searchActive = false;
+  }
 
   redirectToLogin() {
     this.router.navigate(['/login']);
@@ -31,15 +68,21 @@ export class AppComponent {
   }
 
   logout() {
-    this.authService.logout(); // Chama o método logout do serviço de autenticação
+    this.authService.logout();
   }
 
   redirectToCriarProduto() {
-    console.log('Botão clicado, redirecionando para criar-produto');
+    this.closeMenu();
     this.router.navigate(['/criar-produto']);
   }
 
+  redirectToTroca() {
+    this.closeMenu();
+    this.router.navigate(['/transacoes-recebidas']);
+  }
+
   navigateToMyProducts(): void {
+    this.closeMenu();
     this.authService.getUserInfo().subscribe(
       userInfo => {
         const userId = userInfo.id;
@@ -50,7 +93,6 @@ export class AppComponent {
       }
     );
   }
-  
   
   title = 'vucoAPPWeb2';
 }

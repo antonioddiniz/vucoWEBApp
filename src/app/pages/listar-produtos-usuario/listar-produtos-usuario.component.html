@@ -1,24 +1,75 @@
 
-<div class="produtos-container">
-    <mat-grid-list cols="5" rowHeight="1:1.5">
-      <mat-grid-tile *ngFor="let produto of produtos" class="produto-card">
-        <mat-card class="produto-card">
-          <div class="produto-imagem">
-            <img [src]="produto.imagem" alt="{{ produto.nome }}">
+<div class="page-container">
+  <div class="produtos-container">
+    <!-- Header da página -->
+    <div class="page-header">
+      <div class="header-content-wrapper">
+        <mat-icon class="page-icon">inventory</mat-icon>
+        <div class="header-text">
+          <h2 class="page-title">Meus Produtos</h2>
+          <span class="produto-count-badge" *ngIf="produtos?.length">
+            {{ produtos.length }} {{ produtos.length === 1 ? 'produto' : 'produtos' }}
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    <ng-container *ngIf="produtos?.length; else loading">
+      <div class="produtos-grid">
+        <mat-card 
+          class="produto-card" 
+          *ngFor="let produto of produtos"
+          (click)="navigateToDetalhes(produto.id)"
+        >
+          <!-- Imagem do produto com badge -->
+          <div class="produto-imagem-wrapper">
+            <div class="produto-imagem">
+              <img 
+                [src]="produto.imagem" 
+                [alt]="produto.nome"
+                (error)="onImageError($event)"
+              />
+            </div>
+            <div class="produto-badge">
+              <mat-icon class="badge-icon">category</mat-icon>
+              <span>{{ produto.categoria }}</span>
+            </div>
           </div>
-          <mat-card-content>
-            <h2 mat-card-title>{{ produto.nome }}</h2>
-            <p mat-card-subtitle>{{ produto.categoria }}</p>
-            <p>{{ produto.descricao }}</p>
-            <p><strong>Dono:</strong> {{ produto.usuarioId }}</p>
+
+          <!-- Conteúdo do card -->
+          <mat-card-content class="produto-content">
+            <h3 class="produto-nome" mat-card-title>{{ produto.nome }}</h3>
+            <p class="produto-descricao">{{ produto.descricao }}</p>
           </mat-card-content>
-          <mat-card-actions style="display: flex; justify-content: space-evenly;">
-            <button mat-button class="button-detalhes" [routerLink]="['/detalhes-produto', produto.id]">Ver Detalhes</button>
+
+          <!-- Botão de ação -->
+          <mat-card-actions class="produto-actions" (click)="$event.stopPropagation()">
+            <button mat-button class="button-detalhes" [routerLink]="['/detalhes-produto', produto.id]">
+              <mat-icon>visibility</mat-icon>
+              <span>Ver Detalhes</span>
+            </button>
           </mat-card-actions>
         </mat-card>
-      </mat-grid-tile>
-    </mat-grid-list>
+      </div>
+    </ng-container>
+
+    <ng-template #loading>
+      <div class="loading-container">
+        <mat-spinner></mat-spinner>
+        <p>Carregando produtos...</p>
+      </div>
+    </ng-template>
+
+    <div class="empty-state" *ngIf="produtos?.length === 0 && !loading">
+      <mat-icon class="empty-icon">inventory_2</mat-icon>
+      <h3>Nenhum produto cadastrado</h3>
+      <p>Você ainda não possui produtos cadastrados.</p>
+      <button mat-raised-button color="primary" (click)="navigateToCreateProduct()" class="create-button">
+        <mat-icon>add</mat-icon>
+        <span>Criar Primeiro Produto</span>
+      </button>
+    </div>
   </div>
-  
-  
+</div>
+
   

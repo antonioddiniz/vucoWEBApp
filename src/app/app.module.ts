@@ -31,6 +31,11 @@ import { LoginComponent } from './pages/login/login.component';
 import { PaginaCadastroComponent } from './pages/pagina-cadastro/pagina-cadastro.component';
 import { ProdutoListaComponent } from './pages/produto-lista/produto-lista.component';
 import { AuthService } from './services/auth.service';
+import { TrocaComponent } from './pages/troca/troca.component';
+import { TransacoesRecebidasComponent } from './pages/transacoes-recebidas/transacoes-recebidas.component';
+import { BannerCarouselComponent } from './pages/banner-carousel/banner-carousel.component';
+
+
 
 
 
@@ -45,7 +50,10 @@ import { AuthService } from './services/auth.service';
     CadastroProdutoComponent,
     ProdutoListaComponent,
     DetalhesProdutoComponent,
-    ListarProdutosUsuarioComponent, 
+    ListarProdutosUsuarioComponent,
+    TrocaComponent,
+    TransacoesRecebidasComponent,
+    BannerCarouselComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,82 +1,78 @@
-<swiper-container class="swiper-container" style="margin:2%;">
-  <swiper-slide class="swiper-slide">
-    <img src="assets/3.png" alt="Imagem 1">
-  </swiper-slide>
-  <swiper-slide class="swiper-slide">
-    <img src="assets/2.png" alt="Imagem 2">
-  </swiper-slide>
-  <img src="assets/1.png" alt="Imagem 2">
-</swiper-container>
+<div class="page-container">
+  <app-banner-carousel 
+    [items]="carouselItems"
+    [preferredItemWidth]="252"
+    [maxSmallItemWidth]="56">
+  </app-banner-carousel>
 
-
-
-<div class="produtos-container">
-  <ng-container *ngIf="produtos?.length; else loading">
-    <mat-grid-list cols="5" rowHeight="1:1.5">
-      <mat-grid-tile *ngFor="let produto of produtos" class="produto-card">
-        <mat-card class="produto-card">
-          <div class="produto-imagem">
-            <img [src]="produto.imagem" alt="{{ produto.nome }}">
+  <div class="produtos-container">
+    <ng-container *ngIf="produtosPorCategoria?.length; else loading">
+      
+      <!-- Loop para cada categoria -->
+      <div class="categoria-section" *ngFor="let categoriaGroup of produtosPorCategoria">
+        
+        <!-- Header da categoria com ícone -->
+        <div class="categoria-header">
+          <div class="categoria-title-wrapper">
+            <mat-icon class="categoria-icon">category</mat-icon>
+            <h2 class="categoria-title">{{ categoriaGroup.categoria }}</h2>
+            <span class="produto-count">{{ categoriaGroup.produtos.length }} {{ categoriaGroup.produtos.length === 1 ? 'produto' : 'produtos' }}</span>
           </div>
-          <mat-card-content>
-            <h2 mat-card-title>{{ produto.nome }}</h2>
-            <p mat-card-subtitle>{{ produto.categoria }}</p>
-            <p>{{ produto.descricao }}</p>
-            <p><strong>Dono:</strong> {{ produto.usuarioId }}</p>
-          </mat-card-content>
-          <mat-card-actions style="display: flex; justify-content: space-evenly;">
-            <button mat-button class="button-detalhes" [routerLink]="['/detalhes-produto', produto.id]">Ver Detalhes</button>
-            <button mat-button class="button-trocar" style="color:white">Quero trocar</button>
-          </mat-card-actions>
-        </mat-card>
-      </mat-grid-tile>
-    </mat-grid-list>
-  </ng-container>
-
-  <ng-template #loading>
-    <div class="loading-container">
-      <mat-spinner></mat-spinner>
-      <p>Carregando produtos...</p>
-    </div>
-  </ng-template>
-</div>
-
-<!-- 
-<div class="produtos-container">
-  <mat-grid-list cols="5" rowHeight="1:1.5">
-    <mat-grid-tile *ngFor="let produto of produtos" class="produto-card">
-      <mat-card class="produto-card">
-        <div class="produto-imagem">
-          <img [src]="produto.imagem" alt="{{ produto.nome }}">
         </div>
-        <mat-card-content>
-          <h2 mat-card-title>{{ produto.nome }}</h2>
-          <p mat-card-subtitle>{{ produto.categoria }}</p>
-          <p>{{ produto.descricao }}</p>
-          <p><strong>Dono:</strong> {{ produto.usuarioId }}</p>
-        </mat-card-content>
-        <mat-card-actions style="display: flex; justify-content: space-evenly;">
-          <button mat-button class="button-detalhes" [routerLink]="['/detalhes-produto', produto.id]">Ver Detalhes</button>
-          <button mat-button class="button-trocar" style="color:white">Quero trocar</button>
-        </mat-card-actions>
-      </mat-card>
-    </mat-grid-tile>
-  </mat-grid-list>
-</div>
+        
+        <!-- Carrossel de produtos da categoria -->
+        <div class="horizontal-carousel produtos-carousel">
+          <div class="carousel-container produtos-carousel-container">
+            <mat-card 
+              class="produto-card carousel-item" 
+              *ngFor="let produto of categoriaGroup.produtos"
+              (click)="navigateToDetalhes(produto.id)"
+            >
+              <!-- Imagem do produto -->
+              <div class="produto-imagem-wrapper">
+                <div class="produto-imagem">
+                  <img 
+                    [src]="produto.imagem" 
+                    [alt]="produto.nome"
+                    (error)="onImageError($event)"
+                  />
+                </div>
+                <!-- Badge de categoria na imagem -->
+                <div class="produto-badge">
+                  <mat-icon class="badge-icon">category</mat-icon>
+                  <span>{{ produto.categoria }}</span>
+                </div>
+              </div>
 
+              <!-- Conteúdo do card -->
+              <mat-card-content class="produto-content">
+                <h3 class="produto-nome" mat-card-title>{{ produto.nome }}</h3>
+              </mat-card-content>
 
- -->
+              <!-- Botão de ação -->
+              <mat-card-actions class="produto-actions" (click)="$event.stopPropagation()">
+                <button 
+                  *ngIf="!isProdutoDoUsuario(produto)" 
+                  mat-button 
+                  class="button-trocar" 
+                  (click)="navigateToTroca(produto.id)">
+                  <mat-icon>swap_horiz</mat-icon>
+                  <span>Oferecer troca</span>
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+        </div>
+        
+      </div>
+      
+    </ng-container>
 
-
-<!-- <div *ngFor="let produto of produtos" class="produto-item">
-    <div class="produto-imagem">
-      <img [src]="produto.imagem" alt="{{produto.nome}}">
-    </div>
-    <div class="produto-detalhes">
-      <h2>{{produto.nome}}</h2>
-      <p><strong>Categoria:</strong> {{produto.categoria}}</p>
-      <p>{{produto.descricao}}</p>
-      <p><strong>Dono</strong> {{produto.usuarioId}}</p>
-    </div>
+    <ng-template #loading>
+      <div class="loading-container">
+        <mat-spinner></mat-spinner>
+        <p>Carregando produtos...</p>
+      </div>
+    </ng-template>
   </div>
-   -->
+</div>

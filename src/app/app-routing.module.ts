@@ -6,6 +6,9 @@ import { ListarProdutosUsuarioComponent } from './pages/listar-produtos-usuario/
 import { LoginComponent } from './pages/login/login.component';
 import { PaginaCadastroComponent } from './pages/pagina-cadastro/pagina-cadastro.component';
 import { ProdutoListaComponent } from './pages/produto-lista/produto-lista.component';
+import { TrocaComponent } from './pages/troca/troca.component';
+import { TransacoesRecebidasComponent } from './pages/transacoes-recebidas/transacoes-recebidas.component';
+// import { ContraPropostaComponent } from './pages/contra-proposta/contra-proposta.component';
 
 
 const routes: Routes = [
@@ -15,6 +18,10 @@ const routes: Routes = [
   { path: 'lista-produto', component: ProdutoListaComponent },
   { path: 'detalhes-produto/:id', component: DetalhesProdutoComponent },
   { path: 'produtos/usuario/:usuarioId', component: ListarProdutosUsuarioComponent },
+  { path: 'troca', component: TrocaComponent},
+  { path: 'transacoes-recebidas', component: TransacoesRecebidasComponent},
+  // { path: 'contra-proposta', component: ContraPropostaComponent },
+
 ];
 
 @NgModule({
