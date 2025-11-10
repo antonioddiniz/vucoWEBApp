@@ -1,28 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { GoogleAuth } from '@southdevs/capacitor-google-auth';
-import { environment } from '../../../environments/environment';
+import { GoogleAuthService } from '../../services/google-auth.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
   email: string = '';
   password: string = '';
   errorMessage: string = '';
 
-  constructor(private authService: AuthService, private router: Router) { }
-
-  ngOnInit() {
-    GoogleAuth.initialize({
-      clientId: environment.googleClientId,
-      scopes: ['profile', 'email'],
-      grantOfflineAccess: true
-    });
-  }
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private googleAuthService: GoogleAuthService
+  ) { }
 
   login(): void {
     this.authService.login(this.email, this.password).subscribe(
@@ -37,9 +32,9 @@ export class LoginComponent implements OnInit {
 
   async loginWithGoogle(): Promise<void> {
     try {
-      const user = await GoogleAuth.signIn({ scopes: ['email', 'profile'] });
+      const result = await this.googleAuthService.signIn();
       
-      this.authService.loginWithGoogle(user.authentication.idToken).subscribe(
+      this.authService.loginWithGoogle(result.idToken).subscribe(
         response => {
           this.router.navigate(['/']);
         },

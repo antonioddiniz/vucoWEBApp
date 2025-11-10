@@ -1,16 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CadastroUsuarioService } from '../../services/cadastro-usuario.service';
 import { AuthService } from '../../services/auth.service';
-import { GoogleAuth } from '@southdevs/capacitor-google-auth';
-import { environment } from '../../../environments/environment';
+import { GoogleAuthService } from '../../services/google-auth.service';
 
 @Component({
   selector: 'app-pagina-cadastro',
   templateUrl: './pagina-cadastro.component.html',
   styleUrls: ['./pagina-cadastro.component.scss']
 })
-export class PaginaCadastroComponent implements OnInit {
+export class PaginaCadastroComponent {
   nome: string = '';
   senha: string = '';
   confirmaSenha: string = '';
@@ -32,16 +31,9 @@ export class PaginaCadastroComponent implements OnInit {
   constructor(
     private cadastroUsuarioService: CadastroUsuarioService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private googleAuthService: GoogleAuthService
   ) {}
-
-  ngOnInit() {
-    GoogleAuth.initialize({
-      clientId: environment.googleClientId,
-      scopes: ['profile', 'email'],
-      grantOfflineAccess: true
-    });
-  }
 
   verificarSenhas() {
     if (this.senha !== this.confirmaSenha) {
@@ -91,9 +83,9 @@ export class PaginaCadastroComponent implements OnInit {
 
   async signUpWithGoogle(): Promise<void> {
     try {
-      const user = await GoogleAuth.signIn({ scopes: ['email', 'profile'] });
+      const result = await this.googleAuthService.signIn();
       
-      this.authService.loginWithGoogle(user.authentication.idToken).subscribe(
+      this.authService.loginWithGoogle(result.idToken).subscribe(
         response => {
           console.log('Cadastro/Login com Google bem-sucedido');
           alert('Cadastro realizado com sucesso!');
