@@ -1,12 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { CadastroUsuarioService } from '../../services/cadastro-usuario.service';
+import { AuthService } from '../../services/auth.service';
+import { GoogleAuth } from '@southdevs/capacitor-google-auth';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-pagina-cadastro',
   templateUrl: './pagina-cadastro.component.html',
   styleUrls: ['./pagina-cadastro.component.scss']
 })
-export class PaginaCadastroComponent {
+export class PaginaCadastroComponent implements OnInit {
   nome: string = '';
   senha: string = '';
   confirmaSenha: string = '';
@@ -25,7 +29,19 @@ export class PaginaCadastroComponent {
   dataCadastro: string = new Date(Date.now()).toISOString();
   dataAlteracao: string = new Date(Date.now()).toISOString();
 
-  constructor(private cadastroUsuarioService: CadastroUsuarioService) {}
+  constructor(
+    private cadastroUsuarioService: CadastroUsuarioService,
+    private authService: AuthService,
+    private router: Router
+  ) {}
+
+  ngOnInit() {
+    GoogleAuth.initialize({
+      clientId: environment.googleClientId,
+      scopes: ['profile', 'email'],
+      grantOfflineAccess: true
+    });
+  }
 
   verificarSenhas() {
     if (this.senha !== this.confirmaSenha) {
@@ -70,6 +86,27 @@ export class PaginaCadastroComponent {
           alert('Erro ao cadastrar usuário. Tente novamente.');
         }
       );
+    }
+  }
+
+  async signUpWithGoogle(): Promise<void> {
+    try {
+      const user = await GoogleAuth.signIn({ scopes: ['email', 'profile'] });
+      
+      this.authService.loginWithGoogle(user.authentication.idToken).subscribe(
+        response => {
+          console.log('Cadastro/Login com Google bem-sucedido');
+          alert('Cadastro realizado com sucesso!');
+          this.router.navigate(['/']);
+        },
+        error => {
+          console.error('Erro no cadastro/login com Google:', error);
+          alert('Erro ao fazer cadastro com Google. Tente novamente.');
+        }
+      );
+    } catch (error) {
+      console.error('Erro ao fazer sign in com Google:', error);
+      alert('Erro ao conectar com Google. Tente novamente.');
     }
   }
 }
