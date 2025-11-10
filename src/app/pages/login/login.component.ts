@@ -22,7 +22,7 @@ export class LoginComponent {
   login(): void {
     this.authService.login(this.email, this.password).subscribe(
       response => {
-        this.router.navigate(['/']); // Redireciona para a página inicial ou outra página protegida
+        this.router.navigate(['/lista-produto']);
       },
       error => {
         this.errorMessage = 'Invalid email or password';
@@ -36,7 +36,7 @@ export class LoginComponent {
       
       this.authService.loginWithGoogle(result.idToken).subscribe(
         response => {
-          this.router.navigate(['/']);
+          this.router.navigate(['/lista-produto']);
         },
         error => {
           this.errorMessage = 'Google login failed';

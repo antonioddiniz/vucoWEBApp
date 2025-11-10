@@ -70,8 +70,7 @@ export class PaginaCadastroComponent {
         response => {
           console.log('Usuário cadastrado com sucesso!');
           alert('Usuário cadastrado com sucesso!');
-          // Limpar os campos do formulário após o cadastro, se necessário
-          // this.clearForm();
+          this.router.navigate(['/login']);
         },
         error => {
           console.error('Erro ao cadastrar usuário:', error);
@@ -88,8 +87,7 @@ export class PaginaCadastroComponent {
       this.authService.loginWithGoogle(result.idToken).subscribe(
         response => {
           console.log('Cadastro/Login com Google bem-sucedido');
-          alert('Cadastro realizado com sucesso!');
-          this.router.navigate(['/']);
+          this.router.navigate(['/lista-produto']);
         },
         error => {
           console.error('Erro no cadastro/login com Google:', error);

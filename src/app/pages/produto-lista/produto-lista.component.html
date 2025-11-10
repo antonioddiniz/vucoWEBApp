@@ -6,7 +6,14 @@
   </app-banner-carousel>
 
   <div class="produtos-container">
-    <ng-container *ngIf="!isLoading && produtosPorCategoria?.length; else loading">
+    <!-- Loading state -->
+    <div class="loading-container" *ngIf="isLoading">
+      <mat-spinner></mat-spinner>
+      <p>Carregando produtos...</p>
+    </div>
+
+    <!-- Products loaded -->
+    <ng-container *ngIf="!isLoading && produtosPorCategoria?.length">
       
       <!-- Loop para cada categoria -->
       <div class="categoria-section" *ngFor="let categoriaGroup of produtosPorCategoria">
@@ -68,11 +75,9 @@
       
     </ng-container>
 
-    <ng-template #loading>
-      <div class="loading-container">
-        <mat-spinner></mat-spinner>
-        <p>Carregando produtos...</p>
-      </div>
-    </ng-template>
+    <!-- No products message -->
+    <div class="no-products" *ngIf="!isLoading && !produtosPorCategoria?.length">
+      <p>Nenhum produto encontrado.</p>
+    </div>
   </div>
 </div>

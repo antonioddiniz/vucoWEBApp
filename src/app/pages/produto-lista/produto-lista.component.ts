@@ -39,6 +39,8 @@ export class ProdutoListaComponent implements OnInit {
   ngOnInit(): void {
     this.getLoggedUserId();
     this.isLoading = true;
+    this.produtosPorCategoria = []; // Garante que começa vazio
+    
     this.produtoService.getProdutos().subscribe({
       next: (data) => {
         this.produtos = data;
