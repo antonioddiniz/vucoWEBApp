@@ -12,6 +12,7 @@ import { TransacoesRecebidasComponent } from './pages/transacoes-recebidas/trans
 
 
 const routes: Routes = [
+  { path: '', redirectTo: '/lista-produto', pathMatch: 'full' },
   { path: 'cadastro', component: PaginaCadastroComponent},
   { path: 'login', component: LoginComponent },
   { path: 'criar-produto', component: CadastroProdutoComponent },
