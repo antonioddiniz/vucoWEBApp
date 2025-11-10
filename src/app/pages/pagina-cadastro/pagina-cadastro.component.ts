@@ -147,7 +147,12 @@ export class PaginaCadastroComponent {
         },
         error => {
           console.error('Erro ao cadastrar usuário:', error);
-          alert('Erro ao cadastrar usuário. Tente novamente.');
+          // Verifica se é erro de email duplicado
+          if (error.error && error.error.message) {
+            alert(error.error.message);
+          } else {
+            alert('Erro ao cadastrar usuário. Tente novamente.');
+          }
         }
       );
   }
