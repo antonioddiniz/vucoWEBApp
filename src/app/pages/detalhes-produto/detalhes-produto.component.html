@@ -2,7 +2,10 @@
 <div class="modal-overlay" *ngIf="isModalOpen" (click)="closeModal()"></div>
 
 <!-- Modal Container -->
-<div class="modal-container" [class.modal-open]="isModalOpen">
+<div class="modal-container" 
+     [class.modal-open]="isModalOpen"
+     (touchstart)="onTouchStart($event)"
+     (touchend)="onTouchEnd($event)">
   <div class="produto-detalhes-container" *ngIf="produto">
   <mat-card class="produto-detalhes-card">
     <!-- Header com botão voltar -->

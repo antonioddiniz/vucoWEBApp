@@ -22,6 +22,8 @@
   pointer-events: none;
   transition: opacity 0.2s ease;
   overflow-y: auto;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
   
   &.modal-open {
     opacity: 1;

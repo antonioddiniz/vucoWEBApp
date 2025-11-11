@@ -13,6 +13,10 @@ export class AppComponent {
   menuOpen: boolean = false;
   searchQuery: string = '';
   searchActive: boolean = false;
+  private touchStartX: number = 0;
+  private touchStartY: number = 0;
+  private touchEndX: number = 0;
+  private touchEndY: number = 0;
 
   constructor(
     private router: Router,
@@ -67,7 +71,10 @@ export class AppComponent {
   }
 
   logout() {
-    this.authService.logout();
+    if (confirm('Tem certeza que deseja sair?')) {
+      this.authService.logout();
+      this.closeMenu();
+    }
   }
 
   redirectToCriarProduto() {
@@ -99,6 +106,27 @@ export class AppComponent {
 
   isRouteActive(route: string): boolean {
     return this.router.url === route || this.router.url.startsWith(route + '/');
+  }
+
+  onTouchStart(event: TouchEvent): void {
+    this.touchStartX = event.changedTouches[0].screenX;
+    this.touchStartY = event.changedTouches[0].screenY;
+  }
+
+  onTouchEnd(event: TouchEvent): void {
+    this.touchEndX = event.changedTouches[0].screenX;
+    this.touchEndY = event.changedTouches[0].screenY;
+    this.handleSwipe();
+  }
+
+  handleSwipe(): void {
+    const diffX = this.touchStartX - this.touchEndX;
+    const diffY = Math.abs(this.touchStartY - this.touchEndY);
+    
+    // Swipe para a direita (fechar menu) - deve ter movimento horizontal > 50px e movimento vertical < 100px
+    if (diffX < -50 && diffY < 100) {
+      this.closeMenu();
+    }
   }
   
   title = 'vucoAPPWeb2';

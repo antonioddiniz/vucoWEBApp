@@ -30,6 +30,10 @@ export class TrocaComponent implements OnInit, OnDestroy {
   previousQueryParams: any = {};
   isModalOpen: boolean = false;
   private subscriptions: Subscription = new Subscription();
+  private touchStartX: number = 0;
+  private touchStartY: number = 0;
+  private touchEndX: number = 0;
+  private touchEndY: number = 0;
 
   constructor(
     private route: ActivatedRoute,
@@ -49,14 +53,18 @@ export class TrocaComponent implements OnInit, OnDestroy {
     // Observa abertura do modal via serviço
     this.subscriptions.add(
       this.modalService.trocaModalOpen$.subscribe(isOpen => {
+        console.log('🐛 [TrocaComponent] trocaModalOpen$ recebeu:', isOpen);
         this.isModalOpen = isOpen;
+        console.log('🐛 [TrocaComponent] isModalOpen agora é:', this.isModalOpen);
       })
     );
     
     // Observa mudanças no produtoTrocaId
     this.subscriptions.add(
       this.modalService.produtoTrocaId$.subscribe(produtoId => {
+        console.log('🐛 [TrocaComponent] produtoTrocaId$ recebeu:', produtoId);
         if (produtoId) {
+          console.log('🐛 [TrocaComponent] carregando produto desejado:', produtoId);
           this.carregarProdutoDesejado(produtoId);
         }
       })
@@ -105,12 +113,14 @@ export class TrocaComponent implements OnInit, OnDestroy {
   }
 
   carregarProdutoDesejado(produtoId: number) {
+    console.log('🐛 [TrocaComponent] carregarProdutoDesejado iniciado para ID:', produtoId);
     this.produtoService.getProdutoById(produtoId).subscribe(
       (produto) => {
+        console.log('🐛 [TrocaComponent] Produto carregado:', produto);
         this.produtoDesejado = produto;
       },
       (error) => {
-        console.error('Erro ao carregar o produto desejado:', error);
+        console.error('❌ [TrocaComponent] Erro ao carregar o produto desejado:', error);
       }
     );
   }
@@ -195,6 +205,27 @@ export class TrocaComponent implements OnInit, OnDestroy {
       this.router.navigate([this.previousUrl], {
         queryParams: this.previousQueryParams
       });
+    }
+  }
+
+  onTouchStart(event: TouchEvent): void {
+    this.touchStartX = event.changedTouches[0].screenX;
+    this.touchStartY = event.changedTouches[0].screenY;
+  }
+
+  onTouchEnd(event: TouchEvent): void {
+    this.touchEndX = event.changedTouches[0].screenX;
+    this.touchEndY = event.changedTouches[0].screenY;
+    this.handleSwipe();
+  }
+
+  handleSwipe(): void {
+    const diffY = this.touchStartY - this.touchEndY;
+    const diffX = Math.abs(this.touchStartX - this.touchEndX);
+    
+    // Swipe para baixo (fechar modal) - movimento vertical > 100px e horizontal < 50px
+    if (diffY < -100 && diffX < 50) {
+      this.closeModal();
     }
   }
 }

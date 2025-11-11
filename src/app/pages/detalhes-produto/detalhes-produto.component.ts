@@ -21,6 +21,10 @@ export class DetalhesProdutoComponent implements OnInit, OnDestroy {
   previousQueryParams: any = {};
   isModalOpen: boolean = false;
   private subscriptions: Subscription = new Subscription();
+  private touchStartX: number = 0;
+  private touchStartY: number = 0;
+  private touchEndX: number = 0;
+  private touchEndY: number = 0;
 
   constructor(
     private route: ActivatedRoute,
@@ -152,14 +156,26 @@ export class DetalhesProdutoComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.router.navigate(['/troca'], {
-      queryParams: {
-        produtoId: this.produto.id,
-        nomeProduto: this.produto.nome,
-        returnUrl: this.previousUrl,
-        ...this.previousQueryParams
-      }
-    });
+    // Verifica se o usuário está logado
+    if (!this.authService.isAuthenticated()) {
+      alert('Você precisa estar logado para oferecer uma troca.');
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    // Abre modal de troca em vez de navegar
+    if (this.isModalOpen) {
+      this.modalService.openTrocaModal(this.produto.id);
+    } else {
+      this.router.navigate(['/troca'], {
+        queryParams: {
+          produtoId: this.produto.id,
+          nomeProduto: this.produto.nome,
+          returnUrl: this.previousUrl,
+          ...this.previousQueryParams
+        }
+      });
+    }
   }
 
   closeModal(): void {
@@ -180,6 +196,27 @@ export class DetalhesProdutoComponent implements OnInit, OnDestroy {
       this.router.navigate([this.previousUrl], {
         queryParams: this.previousQueryParams
       });
+    }
+  }
+
+  onTouchStart(event: TouchEvent): void {
+    this.touchStartX = event.changedTouches[0].screenX;
+    this.touchStartY = event.changedTouches[0].screenY;
+  }
+
+  onTouchEnd(event: TouchEvent): void {
+    this.touchEndX = event.changedTouches[0].screenX;
+    this.touchEndY = event.changedTouches[0].screenY;
+    this.handleSwipe();
+  }
+
+  handleSwipe(): void {
+    const diffY = this.touchStartY - this.touchEndY;
+    const diffX = Math.abs(this.touchStartX - this.touchEndX);
+    
+    // Swipe para baixo (fechar modal) - movimento vertical > 100px e horizontal < 50px
+    if (diffY < -100 && diffX < 50) {
+      this.closeModal();
     }
   }
 }

@@ -22,7 +22,8 @@
   pointer-events: none;
   transition: opacity 0.2s ease;
   overflow-y: auto;
-  padding-bottom: 80px; // Espaço para barra inferior
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)); // Espaço para barra inferior + safe area
   
   &.modal-open {
     opacity: 1;

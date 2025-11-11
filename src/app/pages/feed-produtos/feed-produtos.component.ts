@@ -102,11 +102,14 @@ export class FeedProdutosComponent implements OnInit, OnDestroy {
   }
 
   isProdutoDoUsuario(produto: any): boolean {
+    console.log('🐛 [Feed] isProdutoDoUsuario - produto:', produto.id, 'usuarioId:', produto.usuarioId, 'loggedUserId:', this.loggedUserId);
     if (!this.loggedUserId) {
+      console.log('🐛 [Feed] Não há usuário logado - retornando false');
       return false;
     }
 
     if (!produto.usuarioId && produto.usuarioId !== 0) {
+      console.log('🐛 [Feed] Produto sem usuarioId - retornando false');
       return false;
     }
 
@@ -118,7 +121,9 @@ export class FeedProdutosComponent implements OnInit, OnDestroy {
       ? parseInt(this.loggedUserId.toString(), 10)
       : this.loggedUserId;
 
-    return produtoUsuarioId === loggedId;
+    const resultado = produtoUsuarioId === loggedId;
+    console.log('🐛 [Feed] Comparação:', produtoUsuarioId, '===', loggedId, '=', resultado);
+    return resultado;
   }
 
   navigateToDetalhes(produtoId: number): void {
@@ -127,8 +132,19 @@ export class FeedProdutosComponent implements OnInit, OnDestroy {
   }
 
   navigateToTroca(produtoId: number): void {
+    console.log('🔄 Tentando abrir modal de troca para produto:', produtoId);
+    console.log('📱 User logado:', this.loggedUserId);
+    
+    // Verifica se o usuário está logado
+    if (!this.authService.isAuthenticated()) {
+      alert('Você precisa estar logado para oferecer uma troca.');
+      this.router.navigate(['/login']);
+      return;
+    }
+    
     // Abre modal em vez de navegar
     this.modalService.openTrocaModal(produtoId);
+    console.log('✅ Modal de troca chamado');
   }
 
   onImageError(event: Event): void {

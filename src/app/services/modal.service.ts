@@ -45,9 +45,13 @@ export class ModalService {
 
   // Métodos para Modal de Troca
   openTrocaModal(produtoId: number): void {
+    console.log('🐛 [ModalService] openTrocaModal chamado para produto:', produtoId);
     this.produtoTrocaIdSubject.next(produtoId);
+    console.log('🐛 [ModalService] produtoTrocaIdSubject.next executado');
     this.trocaModalOpen.next(true);
+    console.log('🐛 [ModalService] trocaModalOpen.next(true) executado');
     document.body.style.overflow = 'hidden';
+    console.log('🐛 [ModalService] body.overflow = hidden');
   }
 
   closeTrocaModal(): void {

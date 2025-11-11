@@ -67,7 +67,10 @@
 <div *ngIf="menuOpen" class="menu-overlay" (click)="closeMenu()"></div>
 
 <!-- Menu lateral (sidebar) -->
-<div class="menu-sidebar" [class.open]="menuOpen">
+<div class="menu-sidebar" 
+     [class.open]="menuOpen"
+     (touchstart)="onTouchStart($event)"
+     (touchend)="onTouchEnd($event)">
     <div class="menu-header">
         <h2>Menu</h2>
         <button (click)="closeMenu()" class="close-button">
@@ -77,10 +80,6 @@
     
     <div class="menu-content">
         <ng-container *ngIf="isAuthenticated()">
-            <button (click)="redirectToCriarProduto()" class="button-escuro menu-button">
-                <mat-icon>add_circle</mat-icon>
-                <span>Desapegar</span>
-            </button>
             <button (click)="navigateToMyProducts()" class="button-claro menu-button">
                 <mat-icon>inventory</mat-icon>
                 <span>Meus produtos</span>
@@ -88,6 +87,10 @@
             <button (click)="redirectToTroca()" class="button-claro menu-button">
                 <mat-icon>swap_horiz</mat-icon>
                 <span>Minhas trocas</span>
+            </button>
+            <button (click)="redirectToCriarProduto()" class="button-escuro menu-button">
+                <mat-icon>add_circle</mat-icon>
+                <span>Desapegar</span>
             </button>
             <button (click)="logout()" class="button-escuro menu-button logout-menu-button">
                 <mat-icon>logout</mat-icon>

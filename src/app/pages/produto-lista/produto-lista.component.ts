@@ -140,6 +140,13 @@ export class ProdutoListaComponent implements OnInit, OnDestroy {
   }
 
   navigateToTroca(produtoId: number): void {
+    // Verifica se o usuário está logado
+    if (!this.authService.isAuthenticated()) {
+      alert('Você precisa estar logado para oferecer uma troca.');
+      this.router.navigate(['/login']);
+      return;
+    }
+    
     // Abre modal em vez de navegar
     this.modalService.openTrocaModal(produtoId);
   }
