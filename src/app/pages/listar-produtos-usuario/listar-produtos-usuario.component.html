@@ -75,14 +75,14 @@
   </div>
 </div>
 
-<!-- Modal de Confirmação de Delete -->
+<!-- Modal de Confirmação de Inativação -->
 <div class="modal" *ngIf="mostrarConfirmacaoDelete" (click)="cancelarDelete()">
   <div class="modal-content" (click)="$event.stopPropagation()">
-    <h3>Confirmar Exclusão</h3>
-    <p>Tem certeza que deseja excluir o produto <strong>{{ produtoParaDeletar?.nome }}</strong>?</p>
-    <p class="warning-text">Esta ação não pode ser desfeita.</p>
+    <h3>Remover Produto</h3>
+    <p>Tem certeza que deseja remover o produto <strong>{{ produtoParaDeletar?.nome }}</strong>?</p>
+    <p class="warning-text">O produto não aparecerá mais nas listagens.</p>
     <div class="modal-actions">
-      <button mat-raised-button color="warn" (click)="confirmarDelete()">Confirmar</button>
+      <button mat-raised-button color="warn" (click)="confirmarDelete()">Remover</button>
       <button mat-button (click)="cancelarDelete()">Cancelar</button>
     </div>
   </div>

@@ -1,0 +1,100 @@
+<div class="feed-container">
+  <!-- Loading inicial -->
+  <div class="loading-container" *ngIf="isLoading">
+    <mat-spinner></mat-spinner>
+    <p>Carregando feed...</p>
+  </div>
+
+  <!-- Feed de produtos -->
+  <div class="feed-content" *ngIf="!isLoading">
+    <!-- Card de produto estilo Instagram -->
+    <div class="produto-post" *ngFor="let produto of produtos">
+      
+      <!-- Header do post (informações do produto) -->
+      <div class="post-header">
+        <div class="post-info">
+          <mat-icon class="categoria-icon">category</mat-icon>
+          <div class="produto-meta">
+            <h3 class="produto-categoria">{{ produto.categoria || 'Produto' }}</h3>
+            <span class="produto-data">{{ formatarData(produto.dataDeCriacao) }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Imagem do produto -->
+      <div class="post-image" (click)="navigateToDetalhes(produto.id)">
+        <img 
+          [src]="produto.imagem" 
+          [alt]="produto.nome"
+          (error)="onImageError($event)"
+        />
+      </div>
+
+      <!-- Ações do post -->
+      <div class="post-actions">
+        <button 
+          mat-icon-button 
+          class="action-button"
+          *ngIf="!isProdutoDoUsuario(produto)"
+          (click)="navigateToTroca(produto.id)">
+          <mat-icon>swap_horiz</mat-icon>
+        </button>
+        <button 
+          mat-icon-button 
+          class="action-button"
+          (click)="navigateToDetalhes(produto.id)">
+          <mat-icon>info</mat-icon>
+        </button>
+      </div>
+
+      <!-- Informações do produto -->
+      <div class="post-content">
+        <h2 class="produto-nome">{{ produto.nome }}</h2>
+        <p class="produto-descricao" *ngIf="produto.descricao">
+          {{ produto.descricao }}
+        </p>
+      </div>
+
+      <!-- Botão de oferecer troca -->
+      <div class="post-footer" *ngIf="!isProdutoDoUsuario(produto)">
+        <button 
+          mat-raised-button 
+          class="button-trocar-feed"
+          (click)="navigateToTroca(produto.id)">
+          <mat-icon>swap_horiz</mat-icon>
+          Oferecer troca
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Botão carregar mais -->
+    <div class="load-more-container" *ngIf="temMais && !isLoading">
+      <button 
+        mat-raised-button 
+        class="button-carregar-mais"
+        (click)="carregarMais()"
+        [disabled]="isLoadingMore">
+        <mat-spinner *ngIf="isLoadingMore" diameter="20"></mat-spinner>
+        <span *ngIf="!isLoadingMore">Carregar mais</span>
+      </button>
+    </div>
+
+    <!-- Mensagem de fim -->
+    <div class="end-message" *ngIf="!temMais && produtos.length > 0">
+      <p>Você viu todos os produtos disponíveis!</p>
+    </div>
+
+    <!-- Mensagem de sem produtos -->
+    <div class="no-products" *ngIf="!isLoading && produtos.length === 0">
+      <mat-icon>inbox</mat-icon>
+      <p>Nenhum produto disponível no momento.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Detalhes do Produto -->
+<app-detalhes-produto></app-detalhes-produto>
+
+<!-- Modal de Oferecer Troca -->
+<app-troca></app-troca>

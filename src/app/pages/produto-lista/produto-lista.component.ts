@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
 import "swiper/css";
 import 'swiper/swiper-bundle.css';
 import { ListarProdutoService } from '../../services/listar-produtos.service';
 import { AuthService } from '../../services/auth.service';
+import { ModalService } from '../../services/modal.service';
 import { CarouselItem } from '../../pages/banner-carousel/banner-carousel.component';
 
 interface ProdutoPorCategoria {
@@ -17,7 +18,7 @@ interface ProdutoPorCategoria {
   templateUrl: './produto-lista.component.html',
   styleUrls: ['./produto-lista.component.scss']
 })
-export class ProdutoListaComponent implements OnInit {
+export class ProdutoListaComponent implements OnInit, OnDestroy {
   produtos: any[] = [];
   produtosPorCategoria: ProdutoPorCategoria[] = [];
   loggedUserId: number | string | null = null;
@@ -33,7 +34,8 @@ export class ProdutoListaComponent implements OnInit {
   constructor(
     private produtoService: ListarProdutoService,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private modalService: ModalService
   ) { }
 
   ngOnInit(): void {
@@ -46,12 +48,17 @@ export class ProdutoListaComponent implements OnInit {
         this.produtos = data;
         this.agruparProdutosPorCategoria();
         this.isLoading = false;
+        // Scroll restaurado automaticamente pelo app.component
       },
       error: (error) => {
         console.error('Erro ao carregar produtos:', error);
         this.isLoading = false;
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    // Cleanup se necessário
   }
 
   getLoggedUserId(): void {
@@ -128,11 +135,13 @@ export class ProdutoListaComponent implements OnInit {
   }
 
   navigateToDetalhes(produtoId: number): void {
-    this.router.navigate(['/detalhes-produto', produtoId]);
+    // Abre modal em vez de navegar
+    this.modalService.openDetalhesModal(produtoId);
   }
 
   navigateToTroca(produtoId: number): void {
-    this.router.navigate(['/troca'], { queryParams: { produtoId } });
+    // Abre modal em vez de navegar
+    this.modalService.openTrocaModal(produtoId);
   }
 
   onImageError(event: Event): void {

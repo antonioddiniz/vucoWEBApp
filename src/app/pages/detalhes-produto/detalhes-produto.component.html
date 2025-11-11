@@ -1,8 +1,13 @@
-<div class="produto-detalhes-container" *ngIf="produto">
+<!-- Modal Overlay -->
+<div class="modal-overlay" *ngIf="isModalOpen" (click)="closeModal()"></div>
+
+<!-- Modal Container -->
+<div class="modal-container" [class.modal-open]="isModalOpen">
+  <div class="produto-detalhes-container" *ngIf="produto">
   <mat-card class="produto-detalhes-card">
     <!-- Header com botão voltar -->
     <div class="header-actions">
-      <button mat-icon-button routerLink="/lista-produto" class="back-button">
+      <button mat-icon-button (click)="goBack()" class="back-button">
         <mat-icon>arrow_back</mat-icon>
       </button>
     </div>
@@ -66,8 +71,9 @@
         <mat-icon>swap_horiz</mat-icon>
         <span>Oferecer Troca</span>
       </button>
-    </mat-card-actions>
+      </mat-card-actions>
   </mat-card>
+  </div>
 </div>
 
 <!-- Exibir mensagem de carregamento enquanto o produto está sendo carregado -->

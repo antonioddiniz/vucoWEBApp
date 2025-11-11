@@ -1,16 +1,67 @@
+// Modal Overlay
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.85);
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+}
+
+// Modal Container
+.modal-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1001;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  overflow-y: auto;
+  padding-bottom: 80px; // Espaço para barra inferior
+  
+  &.modal-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
 .troca-container {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   padding: 16px;
   box-sizing: border-box;
+  background-color: #fff;
+  min-height: 100vh;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  
+  .back-button {
+    flex-shrink: 0;
+    color: rgba(0, 0, 0, 0.87);
+    
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+  }
 }
 
 .troca-title {
   text-align: center;
   font-size: 24px;
   font-weight: 500;
-  margin-bottom: 24px;
+  margin: 0;
+  flex: 1;
   color: rgba(0, 0, 0, 0.87);
 }
 
@@ -201,5 +252,15 @@
   
   .actions-section {
     padding: 16px 0;
+  }
+}
+
+// Animações
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }

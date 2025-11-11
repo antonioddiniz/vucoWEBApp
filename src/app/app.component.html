@@ -99,5 +99,55 @@
 
 <router-outlet />
 
+<!-- Barra de navegação inferior estilo Instagram -->
+<nav class="bottom-navigation">
+  <button 
+    class="nav-item" 
+    [class.active]="isRouteActive('/lista-produto')"
+    (click)="navigateTo('/lista-produto')">
+    <mat-icon>home</mat-icon>
+    <span>Início</span>
+  </button>
+  
+  <button 
+    class="nav-item" 
+    [class.active]="isRouteActive('/busca')"
+    (click)="navigateTo('/busca')">
+    <mat-icon>search</mat-icon>
+    <span>Buscar</span>
+  </button>
+  
+  <button 
+    class="nav-item" 
+    *ngIf="isAuthenticated()"
+    (click)="redirectToCriarProduto()">
+    <mat-icon>add_circle</mat-icon>
+    <span>Adicionar</span>
+  </button>
+  
+  <button 
+    class="nav-item" 
+    [class.active]="isRouteActive('/feed')"
+    (click)="navigateTo('/feed')">
+    <mat-icon>grid_view</mat-icon>
+    <span>Explorar</span>
+  </button>
+  
+  <button 
+    class="nav-item" 
+    *ngIf="isAuthenticated()"
+    (click)="toggleMenu()">
+    <mat-icon>person</mat-icon>
+    <span>Perfil</span>
+  </button>
+  
+  <button 
+    class="nav-item" 
+    *ngIf="!isAuthenticated()"
+    (click)="redirectToLogin()">
+    <mat-icon>login</mat-icon>
+    <span>Entrar</span>
+  </button>
+</nav>
 
 

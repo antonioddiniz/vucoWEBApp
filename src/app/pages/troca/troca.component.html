@@ -1,5 +1,16 @@
-<div class="troca-container">
-  <h2 class="troca-title">Oferecer Troca</h2>
+<!-- Modal Overlay -->
+<div class="modal-overlay" *ngIf="isModalOpen" (click)="closeModal()"></div>
+
+<!-- Modal Container -->
+<div class="modal-container" [class.modal-open]="isModalOpen">
+  <div class="troca-container">
+    <!-- Header com botão voltar -->
+  <div class="header-actions">
+    <button mat-icon-button (click)="goBack()" class="back-button">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h2 class="troca-title">Oferecer Troca</h2>
+  </div>
 
   <!-- Produto que o usuário deseja -->
   <div class="produto-section">
@@ -40,5 +51,6 @@
       [disabled]="!meuItemSelecionado || !produtoDesejado">
       Enviar Proposta de Troca
     </button>
+  </div>
   </div>
 </div>

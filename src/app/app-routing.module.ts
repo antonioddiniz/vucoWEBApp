@@ -8,6 +8,8 @@ import { PaginaCadastroComponent } from './pages/pagina-cadastro/pagina-cadastro
 import { ProdutoListaComponent } from './pages/produto-lista/produto-lista.component';
 import { TrocaComponent } from './pages/troca/troca.component';
 import { TransacoesRecebidasComponent } from './pages/transacoes-recebidas/transacoes-recebidas.component';
+import { BuscaProdutosComponent } from './pages/busca-produtos/busca-produtos.component';
+import { FeedProdutosComponent } from './pages/feed-produtos/feed-produtos.component';
 // import { ContraPropostaComponent } from './pages/contra-proposta/contra-proposta.component';
 
 
@@ -17,16 +19,21 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'criar-produto', component: CadastroProdutoComponent },
   { path: 'lista-produto', component: ProdutoListaComponent },
+  { path: 'feed', component: FeedProdutosComponent },
   { path: 'detalhes-produto/:id', component: DetalhesProdutoComponent },
   { path: 'produtos/usuario/:usuarioId', component: ListarProdutosUsuarioComponent },
   { path: 'troca', component: TrocaComponent},
   { path: 'transacoes-recebidas', component: TransacoesRecebidasComponent},
+  { path: 'busca', component: BuscaProdutosComponent},
   // { path: 'contra-proposta', component: ContraPropostaComponent },
 
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {
+    scrollPositionRestoration: 'disabled', // Desabilita scroll automático do Angular
+    anchorScrolling: 'disabled'
+  })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

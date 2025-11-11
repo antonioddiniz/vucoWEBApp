@@ -37,7 +37,9 @@ export class ListarProdutosUsuarioComponent implements OnInit {
   }
 
   navigateToDetalhes(produtoId: number): void {
-    this.router.navigate(['/detalhes-produto', produtoId]);
+    this.router.navigate(['/detalhes-produto', produtoId], {
+      queryParams: { returnUrl: this.router.url }
+    });
   }
 
   navigateToCreateProduct(): void {

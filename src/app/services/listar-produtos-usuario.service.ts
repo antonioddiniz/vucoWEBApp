@@ -15,6 +15,7 @@ interface Produto {
   dataDeCriacao: string;
   dataDeAlteracao: string;
   usuarioId: number;
+  ativo: boolean;
 }
 
 @Injectable({

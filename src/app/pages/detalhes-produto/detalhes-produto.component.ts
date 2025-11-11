@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Location } from '@angular/common';
+import { Subscription } from 'rxjs';
 import { ProdutoService } from '../../services/produto.service';
 import { AuthService } from '../../services/auth.service';
+import { ModalService } from '../../services/modal.service';
 import { jwtDecode } from 'jwt-decode';
 
 
@@ -10,47 +13,91 @@ import { jwtDecode } from 'jwt-decode';
   templateUrl: './detalhes-produto.component.html',
   styleUrls: ['./detalhes-produto.component.scss']
 })
-export class DetalhesProdutoComponent implements OnInit {
+export class DetalhesProdutoComponent implements OnInit, OnDestroy {
   produto: any;
   loggedUserId: number | null = null;
   nomeUsuario: string = 'Carregando...';
+  previousUrl: string = '/lista-produto';
+  previousQueryParams: any = {};
+  isModalOpen: boolean = false;
+  private subscriptions: Subscription = new Subscription();
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private location: Location,
     private produtoService: ProdutoService,
-    private authService: AuthService
+    private authService: AuthService,
+    private modalService: ModalService
   ) {}
 
   ngOnInit(): void {
     this.getLoggedUserId();
     
+    // Obtém a URL anterior dos query params ou do histórico de navegação
+    const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+    if (returnUrl) {
+      this.previousUrl = returnUrl;
+    }
+    
+    // Preserva query params (como termo de busca)
+    const queryParams = this.route.snapshot.queryParams;
+    Object.keys(queryParams).forEach(key => {
+      if (key !== 'returnUrl') {
+        this.previousQueryParams[key] = queryParams[key];
+      }
+    });
+    
     // Obtém os detalhes do produto
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.produtoService.getProdutoById(Number(id)).subscribe(
-        (produto) => {
-          this.produto = produto;
-          console.log('Produto carregado:', this.produto);
-          
-          // Buscar nome do usuário pelo ID
-          if (this.produto.usuarioId) {
-            this.produtoService.getUsuarioById(this.produto.usuarioId).subscribe(
-              (usuario) => {
-                this.nomeUsuario = usuario?.nome || `Usuário ${this.produto.usuarioId}`;
-              },
-              (error) => {
-                console.error('Erro ao buscar usuário:', error);
-                this.nomeUsuario = `Usuário ${this.produto.usuarioId}`;
-              }
-            );
-          }
-        },
-        (error) => {
-          console.error('Erro ao buscar detalhes do produto', error);
-        }
-      );
+      this.carregarProduto(Number(id));
     }
+    
+    // Observa abertura do modal via serviço
+    this.subscriptions.add(
+      this.modalService.detalhesModalOpen$.subscribe(isOpen => {
+        this.isModalOpen = isOpen;
+      })
+    );
+    
+    // Observa mudanças no produtoId
+    this.subscriptions.add(
+      this.modalService.produtoId$.subscribe(produtoId => {
+        if (produtoId) {
+          this.carregarProduto(produtoId);
+        }
+      })
+    );
+  }
+  
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
+  
+  carregarProduto(id: number): void {
+    this.produtoService.getProdutoById(id).subscribe(
+      (produto) => {
+        this.produto = produto;
+        console.log('Produto carregado:', this.produto);
+        
+        // Buscar nome do usuário pelo ID
+        if (this.produto.usuarioId) {
+          this.produtoService.getUsuarioById(this.produto.usuarioId).subscribe(
+            (usuario) => {
+              this.nomeUsuario = usuario?.nome || `Usuário ${this.produto.usuarioId}`;
+            },
+            (error) => {
+              console.error('Erro ao buscar usuário:', error);
+              this.nomeUsuario = `Usuário ${this.produto.usuarioId}`;
+            }
+          );
+        }
+      },
+      (error) => {
+        console.error('Erro ao buscar detalhes do produto', error);
+      }
+    );
   }
 
   getLoggedUserId(): void {
@@ -108,8 +155,31 @@ export class DetalhesProdutoComponent implements OnInit {
     this.router.navigate(['/troca'], {
       queryParams: {
         produtoId: this.produto.id,
-        nomeProduto: this.produto.nome
+        nomeProduto: this.produto.nome,
+        returnUrl: this.previousUrl,
+        ...this.previousQueryParams
       }
     });
+  }
+
+  closeModal(): void {
+    this.modalService.closeDetalhesModal();
+  }
+  
+  goBack(): void {
+    // Se está em modo modal, apenas fecha
+    if (this.isModalOpen) {
+      this.closeModal();
+      return;
+    }
+    
+    // Caso contrário, navegação tradicional
+    if (window.history.length > 1) {
+      this.location.back();
+    } else {
+      this.router.navigate([this.previousUrl], {
+        queryParams: this.previousQueryParams
+      });
+    }
   }
 }

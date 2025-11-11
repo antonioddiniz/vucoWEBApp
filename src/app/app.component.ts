@@ -40,9 +40,8 @@ export class AppComponent {
 
   performSearch(): void {
     if (this.searchQuery.trim()) {
-      // Implemente sua lógica de busca aqui
-      console.log('Buscar:', this.searchQuery);
-      // Exemplo: this.router.navigate(['/busca'], { queryParams: { q: this.searchQuery } });
+      this.router.navigate(['/busca'], { queryParams: { q: this.searchQuery } });
+      this.searchActive = false;
     }
   }
 
@@ -92,6 +91,14 @@ export class AppComponent {
         console.error('Erro ao obter informações do usuário:', error);
       }
     );
+  }
+
+  navigateTo(route: string): void {
+    this.router.navigate([route]);
+  }
+
+  isRouteActive(route: string): boolean {
+    return this.router.url === route || this.router.url.startsWith(route + '/');
   }
   
   title = 'vucoAPPWeb2';

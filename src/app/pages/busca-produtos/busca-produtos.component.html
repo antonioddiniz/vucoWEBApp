@@ -1,0 +1,119 @@
+<div class="busca-container">
+  <!-- Header com termo de busca -->
+  <div class="busca-header">
+    <h2 class="busca-title">
+      <mat-icon class="search-icon">search</mat-icon>
+      Resultados para: <span class="termo-busca">"{{ termoBusca }}"</span>
+    </h2>
+    <p class="resultado-count" *ngIf="!isLoading">
+      {{ totalItens }} {{ totalItens === 1 ? 'produto encontrado' : 'produtos encontrados' }}
+    </p>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Buscando produtos...</p>
+  </div>
+
+  <!-- Resultados vazios -->
+  <div *ngIf="!isLoading && produtos.length === 0" class="empty-state">
+    <mat-icon class="empty-icon">search_off</mat-icon>
+    <h3>Nenhum produto encontrado</h3>
+    <p>Não encontramos produtos que correspondam à sua busca.</p>
+    <p class="suggestion">Tente usar palavras-chave diferentes ou navegue pelas categorias.</p>
+    <button mat-raised-button color="primary" (click)="router.navigate(['/lista-produto'])" class="browse-button">
+      <mat-icon>explore</mat-icon>
+      <span>Ver Todos os Produtos</span>
+    </button>
+  </div>
+
+  <!-- Grid de produtos -->
+  <div *ngIf="!isLoading && produtos.length > 0" class="produtos-grid">
+    <mat-card 
+      class="produto-card" 
+      *ngFor="let produto of produtos"
+      (click)="navigateToDetalhes(produto.id)"
+    >
+      <!-- Imagem do produto -->
+      <div class="produto-imagem-wrapper">
+        <div class="produto-imagem">
+          <img 
+            [src]="produto.imagem" 
+            [alt]="produto.nome"
+            (error)="onImageError($event)"
+          />
+        </div>
+        <div class="produto-badge">
+          <mat-icon class="badge-icon">category</mat-icon>
+          <span>{{ produto.categoria }}</span>
+        </div>
+      </div>
+
+      <!-- Conteúdo do card -->
+      <mat-card-content class="produto-content">
+        <h3 class="produto-nome" mat-card-title>{{ produto.nome }}</h3>
+        <p class="produto-descricao">{{ produto.descricao }}</p>
+      </mat-card-content>
+
+      <!-- Botões de ação -->
+      <mat-card-actions class="produto-actions" (click)="$event.stopPropagation()">
+        <button 
+          mat-button 
+          class="button-detalhes" 
+          (click)="navigateToDetalhes(produto.id)">
+          <mat-icon>visibility</mat-icon>
+          <span>Ver Detalhes</span>
+        </button>
+        
+        <button 
+          *ngIf="!isProdutoDoUsuario(produto)"
+          mat-raised-button 
+          color="primary" 
+          class="button-trocar"
+          (click)="navigateToTroca(produto.id)">
+          <mat-icon>swap_horiz</mat-icon>
+          <span>Trocar</span>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <!-- Paginação -->
+  <div *ngIf="!isLoading && produtos.length > 0 && totalPaginas > 1" class="paginacao">
+    <button 
+      mat-icon-button 
+      class="pagina-btn"
+      [disabled]="paginaAtual === 1"
+      (click)="mudarPagina(paginaAtual - 1)">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+    
+    <button 
+      *ngFor="let pagina of getPaginas()"
+      mat-button
+      class="numero-pagina"
+      [class.ativa]="pagina === paginaAtual"
+      (click)="mudarPagina(pagina)">
+      {{ pagina }}
+    </button>
+    
+    <button 
+      mat-icon-button 
+      class="pagina-btn"
+      [disabled]="paginaAtual === totalPaginas"
+      (click)="mudarPagina(paginaAtual + 1)">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+    
+    <span class="info-paginacao">
+      Página {{ paginaAtual }} de {{ totalPaginas }}
+    </span>
+  </div>
+</div>
+
+<!-- Modal de Detalhes do Produto -->
+<app-detalhes-produto></app-detalhes-produto>
+
+<!-- Modal de Oferecer Troca -->
+<app-troca></app-troca>

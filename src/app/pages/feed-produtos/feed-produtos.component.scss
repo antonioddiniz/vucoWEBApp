@@ -1,0 +1,253 @@
+.feed-container {
+  background-color: #fafafa;
+  min-height: 100vh;
+  padding-bottom: 80px; // Espaço para a barra inferior
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  gap: 16px;
+
+  p {
+    color: #8e8e8e;
+    font-size: 14px;
+  }
+}
+
+.feed-content {
+  max-width: 614px; // Largura típica do Instagram
+  margin: 0 auto;
+  padding: 20px 0;
+}
+
+.produto-post {
+  background: white;
+  border: 1px solid #dbdbdb;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  overflow: hidden;
+
+  // Header do post
+  .post-header {
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #efefef;
+
+    .post-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .categoria-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 24px;
+        flex-shrink: 0;
+      }
+
+      .produto-meta {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+
+        .produto-categoria {
+          margin: 0;
+          font-size: 14px;
+          font-weight: 600;
+          color: #262626;
+        }
+
+        .produto-data {
+          font-size: 12px;
+          color: #8e8e8e;
+        }
+      }
+    }
+  }
+
+  // Imagem do produto
+  .post-image {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: #f0f0f0;
+    cursor: pointer;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    &:hover img {
+      transform: scale(1.02);
+    }
+  }
+
+  // Ações do post
+  .post-actions {
+    padding: 8px 16px;
+    display: flex;
+    gap: 8px;
+    border-bottom: 1px solid #efefef;
+
+    .action-button {
+      color: #262626;
+
+      mat-icon {
+        font-size: 28px;
+        width: 28px;
+        height: 28px;
+      }
+
+      &:hover {
+        color: #8e8e8e;
+      }
+    }
+  }
+
+  // Conteúdo do post
+  .post-content {
+    padding: 16px;
+
+    .produto-nome {
+      margin: 0 0 8px 0;
+      font-size: 16px;
+      font-weight: 600;
+      color: #262626;
+      line-height: 1.4;
+    }
+
+    .produto-descricao {
+      margin: 0;
+      font-size: 14px;
+      color: #262626;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+  }
+
+  // Footer do post
+  .post-footer {
+    padding: 0 16px 16px;
+
+    .button-trocar-feed {
+      width: 100%;
+      background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+      color: white;
+      font-weight: 600;
+      font-size: 14px;
+      padding: 10px 0;
+      border-radius: 8px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
+
+      &:hover {
+        opacity: 0.9;
+      }
+    }
+  }
+}
+
+// Botão carregar mais
+.load-more-container {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+
+  .button-carregar-mais {
+    background: white;
+    border: 1px solid #dbdbdb;
+    color: #262626;
+    font-weight: 600;
+    padding: 12px 32px;
+    border-radius: 8px;
+    min-width: 200px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    &:hover:not(:disabled) {
+      background: #fafafa;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+}
+
+// Mensagem de fim
+.end-message {
+  text-align: center;
+  padding: 40px 20px;
+  color: #8e8e8e;
+
+  p {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+  }
+}
+
+// Mensagem de sem produtos
+.no-products {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: #8e8e8e;
+
+  mat-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+  }
+
+  p {
+    margin: 0;
+    font-size: 16px;
+  }
+}
+
+// Responsivo - Mobile
+@media (max-width: 768px) {
+  .feed-content {
+    padding: 0;
+  }
+
+  .produto-post {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+}

@@ -13,6 +13,7 @@ interface Produto {
   dataDeCriacao: string;
   dataDeAlteracao: string;
   usuarioId: number;
+  ativo: boolean;
 }
 
 @Injectable({
@@ -25,5 +26,24 @@ export class ListarProdutoService {
 
   getProdutos(): Observable<Produto[]> {
     return this.http.get<Produto[]>(this.apiUrl);
+  }
+
+  buscarProdutos(termo: string, pagina: number = 1, itensPorPagina: number = 20): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/v1/produtos/buscar`, {
+      params: {
+        q: termo,
+        pagina: pagina.toString(),
+        itensPorPagina: itensPorPagina.toString()
+      }
+    });
+  }
+
+  getFeedProdutos(pagina: number = 1, itensPorPagina: number = 10): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/v1/produtos/feed`, {
+      params: {
+        pagina: pagina.toString(),
+        itensPorPagina: itensPorPagina.toString()
+      }
+    });
   }
 }

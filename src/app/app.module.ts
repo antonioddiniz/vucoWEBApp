@@ -34,6 +34,8 @@ import { AuthService } from './services/auth.service';
 import { TrocaComponent } from './pages/troca/troca.component';
 import { TransacoesRecebidasComponent } from './pages/transacoes-recebidas/transacoes-recebidas.component';
 import { BannerCarouselComponent } from './pages/banner-carousel/banner-carousel.component';
+import { BuscaProdutosComponent } from './pages/busca-produtos/busca-produtos.component';
+import { FeedProdutosComponent } from './pages/feed-produtos/feed-produtos.component';
 
 
 
@@ -54,6 +56,8 @@ import { BannerCarouselComponent } from './pages/banner-carousel/banner-carousel
     TrocaComponent,
     TransacoesRecebidasComponent,
     BannerCarouselComponent,
+    BuscaProdutosComponent,
+    FeedProdutosComponent,
   ],
   imports: [
     BrowserModule,

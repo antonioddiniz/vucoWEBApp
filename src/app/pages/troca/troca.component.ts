@@ -1,10 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Location } from '@angular/common';
+import { Subscription } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
 import { TransacaoService } from '../../services/transacao.service';
 import { ListarProdutosUsuarioService } from '../../services/listar-produtos-usuario.service';
 import { ProdutoService } from '../../services/produto.service';
 import { AuthService } from '../../services/auth.service';
+import { ModalService } from '../../services/modal.service';
 
 interface Produto {
   id: number;
@@ -18,33 +21,70 @@ interface Produto {
   templateUrl: './troca.component.html',
   styleUrls: ['./troca.component.scss']
 })
-export class TrocaComponent implements OnInit {
+export class TrocaComponent implements OnInit, OnDestroy {
   produtoDesejado: Produto | null = null;
   meusItens: Produto[] = [];
   meuItemSelecionado: Produto | null = null;
   loggedUserId: number | null = null;
+  previousUrl: string = '/lista-produto';
+  previousQueryParams: any = {};
+  isModalOpen: boolean = false;
+  private subscriptions: Subscription = new Subscription();
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private location: Location,
     private transacaoService: TransacaoService,
     private listarProdutosUsuarioService: ListarProdutosUsuarioService,
     private produtoService: ProdutoService,
-    private authService: AuthService
+    private authService: AuthService,
+    private modalService: ModalService
   ) {}
 
   ngOnInit(): void {
     this.getLoggedUserId();
+    this.carregarMeusProdutos();
     
+    // Observa abertura do modal via serviço
+    this.subscriptions.add(
+      this.modalService.trocaModalOpen$.subscribe(isOpen => {
+        this.isModalOpen = isOpen;
+      })
+    );
+    
+    // Observa mudanças no produtoTrocaId
+    this.subscriptions.add(
+      this.modalService.produtoTrocaId$.subscribe(produtoId => {
+        if (produtoId) {
+          this.carregarProdutoDesejado(produtoId);
+        }
+      })
+    );
+    
+    // Também suporta navegação via rota (modo tradicional)
     this.route.queryParams.subscribe(params => {
-      const produtoId = Number(params['produtoId']); // ID do produto que o usuário quer
+      const produtoId = Number(params['produtoId']);
 
-      if (produtoId) {
+      if (produtoId && !this.isModalOpen) {
         this.carregarProdutoDesejado(produtoId);
       }
+      
+      const returnUrl = params['returnUrl'];
+      if (returnUrl) {
+        this.previousUrl = returnUrl;
+      }
+      
+      Object.keys(params).forEach(key => {
+        if (key !== 'produtoId' && key !== 'nomeProduto' && key !== 'returnUrl') {
+          this.previousQueryParams[key] = params[key];
+        }
+      });
     });
-
-    this.carregarMeusProdutos();
+  }
+  
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   getLoggedUserId(): void {
@@ -121,12 +161,40 @@ export class TrocaComponent implements OnInit {
     this.transacaoService.registrarTransacao(transacao).subscribe(
       (response) => {
         alert('Proposta enviada com sucesso!');
-        this.router.navigate(['/lista-produto']);
+        if (this.isModalOpen) {
+          this.closeModal();
+        } else {
+          this.goBack();
+        }
       },
       (error) => {
         console.error('Erro ao registrar transação:', error);
         alert('Houve um erro ao enviar a proposta.');
       }
     );
+  }
+  
+  closeModal(): void {
+    this.modalService.closeTrocaModal();
+    // Limpa seleção
+    this.meuItemSelecionado = null;
+    this.produtoDesejado = null;
+  }
+
+  goBack(): void {
+    // Se está em modo modal, apenas fecha
+    if (this.isModalOpen) {
+      this.closeModal();
+      return;
+    }
+    
+    // Navegação tradicional
+    if (window.history.length > 1) {
+      this.location.back();
+    } else {
+      this.router.navigate([this.previousUrl], {
+        queryParams: this.previousQueryParams
+      });
+    }
   }
 }

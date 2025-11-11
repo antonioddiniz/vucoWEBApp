@@ -1,9 +1,40 @@
+// Modal Overlay
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.85);
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+}
+
+// Modal Container
+.modal-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1001;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  overflow-y: auto;
+  
+  &.modal-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
 .produto-detalhes-container {
   display: flex;
   justify-content: center;
   padding: 16px;
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background-color: transparent;
 }
 
 .produto-detalhes-card {
@@ -267,6 +298,21 @@
       justify-content: center;
       padding: 14px 24px;
     }
+  }
+  
+  // Ajustes para modal em mobile
+  .modal-container {
+    padding-bottom: 80px; // Espaço para barra inferior
+  }
+}
+
+// Animações
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
   
