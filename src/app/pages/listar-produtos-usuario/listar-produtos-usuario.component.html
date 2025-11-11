@@ -42,11 +42,14 @@
             <p class="produto-descricao">{{ produto.descricao }}</p>
           </mat-card-content>
 
-          <!-- Botão de ação -->
+          <!-- Botões de ação -->
           <mat-card-actions class="produto-actions" (click)="$event.stopPropagation()">
             <button mat-button class="button-detalhes" [routerLink]="['/detalhes-produto', produto.id]">
               <mat-icon>visibility</mat-icon>
-              <span>Ver Detalhes</span>
+              <span>Detalhes</span>
+            </button>
+            <button mat-button class="button-deletar" (click)="abrirConfirmacaoDelete(produto, $event)">
+              <mat-icon>delete_outline</mat-icon>
             </button>
           </mat-card-actions>
         </mat-card>
@@ -72,4 +75,16 @@
   </div>
 </div>
 
+<!-- Modal de Confirmação de Delete -->
+<div class="modal" *ngIf="mostrarConfirmacaoDelete" (click)="cancelarDelete()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <h3>Confirmar Exclusão</h3>
+    <p>Tem certeza que deseja excluir o produto <strong>{{ produtoParaDeletar?.nome }}</strong>?</p>
+    <p class="warning-text">Esta ação não pode ser desfeita.</p>
+    <div class="modal-actions">
+      <button mat-raised-button color="warn" (click)="confirmarDelete()">Confirmar</button>
+      <button mat-button (click)="cancelarDelete()">Cancelar</button>
+    </div>
+  </div>
+</div>
   

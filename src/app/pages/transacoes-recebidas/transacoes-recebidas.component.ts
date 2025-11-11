@@ -200,4 +200,9 @@ export class TransacoesRecebidasComponent implements OnInit {
       img.src = 'assets/placeholder.png';
     }
   }
+
+  // Verifica se o usuário logado foi quem enviou a transação
+  isUsuarioEnviou(transacao: any): boolean {
+    return this.usuarioLogadoId === transacao.idUsuario1;
+  }
 }

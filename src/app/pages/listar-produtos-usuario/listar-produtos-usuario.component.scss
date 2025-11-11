@@ -155,16 +155,17 @@
 .produto-actions {
   padding: 12px 16px 16px 16px;
   display: flex;
-  justify-content: center;
+  gap: 8px;
+  justify-content: space-between;
   
   .button-detalhes {
     background-color: white;
     border: 1px solid #004C99;
     border-radius: 24px;
     color: #004C99;
-    width: 100%;
+    flex: 1;
     height: 44px;
-    padding: 0;
+    padding: 0 16px;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -188,6 +189,45 @@
       color: white;
       transform: translateY(-1px);
       box-shadow: 0 4px 8px rgba(0, 76, 153, 0.3);
+    }
+  }
+  
+  .button-deletar {
+    background-color: white;
+    border: 1px solid #dc3545;
+    border-radius: 50%;
+    color: #dc3545;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    padding: 0 !important;
+    cursor: pointer;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.2s ease;
+    line-height: 1 !important;
+    
+    mat-icon {
+      font-size: 22px;
+      width: 22px;
+      height: 22px;
+      line-height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 !important;
+    }
+    
+    &:hover {
+      background-color: #dc3545;
+      color: white;
+      transform: translateY(-1px) scale(1.05);
+      box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+    }
+    
+    &:active {
+      transform: translateY(0) scale(0.98);
     }
   }
 }
@@ -333,15 +373,33 @@
   
   .produto-actions {
     padding: 8px 12px 12px 12px;
+    gap: 6px;
     
     .button-detalhes {
       height: 40px;
-      font-size: 13px;
+      padding: 0 12px;
       
       mat-icon {
         font-size: 18px;
         width: 18px;
         height: 18px;
+      }
+      
+      span {
+        font-size: 13px;
+      }
+    }
+    
+    .button-deletar {
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+        line-height: 20px;
       }
     }
   }
@@ -368,5 +426,126 @@
       max-width: 280px;
       padding: 14px 20px;
     }
+  }
+}
+
+// Modal de confirmação
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.2s ease;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 440px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease;
+  
+  h3 {
+    margin: 0 0 16px 0;
+    font-size: 24px;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.87);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    
+    &::before {
+      content: '⚠️';
+      font-size: 28px;
+    }
+  }
+  
+  p {
+    margin: 0 0 12px 0;
+    font-size: 16px;
+    color: rgba(0, 0, 0, 0.7);
+    line-height: 1.5;
+    
+    strong {
+      color: rgba(0, 0, 0, 0.87);
+      font-weight: 600;
+    }
+  }
+  
+  .warning-text {
+    color: #dc3545;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 24px;
+  }
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 24px;
+  
+  button {
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    
+    &[color="warn"] {
+      background-color: #dc3545;
+      color: white;
+      
+      &:hover {
+        background-color: #c82333;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+      }
+      
+      &:active {
+        transform: translateY(0);
+      }
+    }
+    
+    &:not([color]) {
+      background-color: transparent;
+      color: rgba(0, 0, 0, 0.6);
+      
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.04);
+      }
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
   }
 }

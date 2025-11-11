@@ -69,15 +69,24 @@
       </div>
 
       <div class="botoes-transacao" *ngIf="statusSelecionado === 2">
-        <button class="btn-aceitar" (click)="abrirConfirmacao(transacao)">
-          Aceitar
-        </button>
-        <button class="btn-contraproposta" (click)="oferecerTroca(transacao)">
-          Contraproposta
-        </button>
-        <button class="btn-recusar" (click)="abrirDeletar(transacao)">
-          Cancelar
-        </button>
+        <!-- Se o usuário logado foi quem enviou a transação, mostra apenas o botão de cancelar -->
+        <ng-container *ngIf="isUsuarioEnviou(transacao); else botoesRecebedor">
+          <button class="btn-recusar" (click)="abrirDeletar(transacao)">
+            Cancelar
+          </button>
+        </ng-container>
+        <!-- Se o usuário logado recebeu a transação, mostra todos os botões -->
+        <ng-template #botoesRecebedor>
+          <button class="btn-aceitar" (click)="abrirConfirmacao(transacao)">
+            Aceitar
+          </button>
+          <button class="btn-contraproposta" (click)="oferecerTroca(transacao)">
+            Contraproposta
+          </button>
+          <button class="btn-recusar" (click)="abrirDeletar(transacao)">
+            Cancelar
+          </button>
+        </ng-template>
       </div>
     </div>
   </div>
