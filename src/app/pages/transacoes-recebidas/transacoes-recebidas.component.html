@@ -97,9 +97,10 @@
   <div class="modal-content" (click)="$event.stopPropagation()">
     <h3>Confirmar Aceite</h3>
     <p>Tem certeza que deseja aceitar esta transação?</p>
+    <p class="info-text">Ao aceitar, você confirma a troca dos produtos.</p>
     <div class="modal-actions">
-      <button class="btn-aceitar" (click)="confirmarAceite()">Confirmar</button>
-      <button class="btn-recusar" (click)="cancelarConfirmacao()">Cancelar</button>
+      <button mat-raised-button color="primary" (click)="confirmarAceite()">Confirmar</button>
+      <button mat-button (click)="cancelarConfirmacao()">Cancelar</button>
     </div>
   </div>
 </div>
@@ -109,9 +110,10 @@
   <div class="modal-content" (click)="$event.stopPropagation()">
     <h3>Confirmar Cancelamento</h3>
     <p>Tem certeza que deseja cancelar esta transação?</p>
+    <p class="warning-text">Esta ação não pode ser desfeita.</p>
     <div class="modal-actions">
-      <button class="btn-aceitar" (click)="confirmarDelete()">Confirmar</button>
-      <button class="btn-recusar" (click)="cancelarDeletar()">Cancelar</button>
+      <button mat-raised-button color="warn" (click)="confirmarDelete()">Confirmar</button>
+      <button mat-button (click)="cancelarDeletar()">Cancelar</button>
     </div>
   </div>
 </div>

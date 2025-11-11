@@ -1,0 +1,196 @@
+// Estilos globais para modais - Design System
+// Usar estas classes em todos os modais da aplicação para manter consistência visual
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.2s ease;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 440px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease;
+  
+  h3 {
+    margin: 0 0 16px 0;
+    font-size: 24px;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.87);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    
+    &::before {
+      content: '⚠️';
+      font-size: 28px;
+    }
+  }
+  
+  p {
+    margin: 0 0 12px 0;
+    font-size: 16px;
+    color: rgba(0, 0, 0, 0.7);
+    line-height: 1.5;
+    
+    strong {
+      color: rgba(0, 0, 0, 0.87);
+      font-weight: 600;
+    }
+  }
+  
+  .warning-text {
+    color: #dc3545;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 24px;
+  }
+  
+  .info-text {
+    color: #2196F3;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 24px;
+  }
+  
+  .success-text {
+    color: #4CAF50;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 24px;
+  }
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 24px;
+  
+  button {
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    
+    &[color="warn"] {
+      background-color: #dc3545;
+      color: white;
+      
+      &:hover {
+        background-color: #c82333;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+      }
+      
+      &:active {
+        transform: translateY(0);
+      }
+    }
+    
+    &[color="primary"] {
+      background-color: #4CAF50;
+      color: white;
+      
+      &:hover {
+        background-color: #45a049;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+      }
+      
+      &:active {
+        transform: translateY(0);
+      }
+    }
+    
+    &[color="accent"] {
+      background-color: #2196F3;
+      color: white;
+      
+      &:hover {
+        background-color: #1976D2;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
+      }
+      
+      &:active {
+        transform: translateY(0);
+      }
+    }
+    
+    &:not([color]) {
+      background-color: transparent;
+      color: rgba(0, 0, 0, 0.6);
+      
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.04);
+      }
+    }
+  }
+}
+
+// Animações
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+// Responsividade
+@media (max-width: 768px) {
+  .modal-content {
+    padding: 24px;
+    max-width: 90%;
+    
+    h3 {
+      font-size: 20px;
+      
+      &::before {
+        font-size: 24px;
+      }
+    }
+    
+    p {
+      font-size: 14px;
+    }
+  }
+  
+  .modal-actions {
+    flex-direction: column;
+    gap: 8px;
+    
+    button {
+      width: 100%;
+    }
+  }
+}
