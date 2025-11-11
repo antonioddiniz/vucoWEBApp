@@ -199,6 +199,7 @@
 
 .produto-actions {
   padding: 16px 24px 24px 24px;
+  padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
   display: flex;
   justify-content: center;
   
