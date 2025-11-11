@@ -9,6 +9,19 @@ const config: CapacitorConfig = {
     allowNavigation: ['*']
   },
   plugins: {
+    SplashScreen: {
+      launchShowDuration: 2000, // Duração em milissegundos (2 segundos)
+      launchAutoHide: true, // Esconde automaticamente
+      backgroundColor: '#ffffff', // Cor de fundo
+      androidSplashResourceName: 'splash', // Nome do recurso no Android
+      androidScaleType: 'CENTER_CROP', // Como a imagem é dimensionada
+      showSpinner: false, // Mostrar spinner de carregamento
+      androidSpinnerStyle: 'large',
+      iosSpinnerStyle: 'small',
+      spinnerColor: '#999999',
+      splashFullScreen: true, // Tela cheia
+      splashImmersive: true // Modo imersivo (esconde barra de status)
+    },
     CapacitorHttp: {
       enabled: true
     },
