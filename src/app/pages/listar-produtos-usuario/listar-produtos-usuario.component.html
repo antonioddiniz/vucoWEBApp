@@ -44,7 +44,7 @@
 
           <!-- Botões de ação -->
           <mat-card-actions class="produto-actions" (click)="$event.stopPropagation()">
-            <button mat-button class="button-detalhes" [routerLink]="['/detalhes-produto', produto.id]">
+            <button mat-button class="button-detalhes" (click)="navigateToDetalhes(produto.id)">
               <mat-icon>visibility</mat-icon>
               <span>Detalhes</span>
             </button>
@@ -87,4 +87,10 @@
     </div>
   </div>
 </div>
+
+<!-- Modal de Detalhes do Produto -->
+<app-detalhes-produto></app-detalhes-produto>
+
+<!-- Modal de Oferecer Troca -->
+<app-troca></app-troca>
   

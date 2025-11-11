@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { ListarProdutosUsuarioService } from '../../services/listar-produtos-usuario.service';
 import { ProdutoService } from '../../services/produto.service';
+import { ModalService } from '../../services/modal.service';
 
 @Component({
   selector: 'app-listar-produtos-usuario',
@@ -18,7 +19,8 @@ export class ListarProdutosUsuarioComponent implements OnInit {
     private produtoService: ListarProdutosUsuarioService,
     private produtoServiceGeral: ProdutoService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private modalService: ModalService
   ) {}
 
   ngOnInit(): void {
@@ -37,9 +39,8 @@ export class ListarProdutosUsuarioComponent implements OnInit {
   }
 
   navigateToDetalhes(produtoId: number): void {
-    this.router.navigate(['/detalhes-produto', produtoId], {
-      queryParams: { returnUrl: this.router.url }
-    });
+    // Abre modal em vez de navegar
+    this.modalService.openDetalhesModal(produtoId);
   }
 
   navigateToCreateProduct(): void {
