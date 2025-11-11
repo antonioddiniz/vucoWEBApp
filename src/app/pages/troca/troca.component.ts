@@ -220,15 +220,8 @@ export class TrocaComponent implements OnInit, OnDestroy {
   }
 
   handleSwipe(): void {
-    const diffY = this.touchStartY - this.touchEndY;
     const diffX = this.touchStartX - this.touchEndX;
-    const absDiffX = Math.abs(diffX);
-    const absDiffY = Math.abs(diffY);
-    
-    // Swipe para baixo (fechar modal) - movimento vertical > 100px e horizontal < 50px
-    if (diffY < -100 && absDiffX < 50) {
-      this.closeModal();
-    }
+    const absDiffY = Math.abs(this.touchStartY - this.touchEndY);
     
     // Swipe para a direita (fechar modal) - movimento horizontal > 100px e vertical < 50px
     if (diffX < -100 && absDiffY < 50) {
