@@ -144,15 +144,76 @@ export class PaginaCadastroComponent {
   }
 
   registerUser() {
+    // Valida campos obrigatórios
+    if (!this.nome || !this.nome.trim()) {
+      alert('Por favor, preencha o nome completo.');
+      return;
+    }
+
+    if (!this.cpf || !this.cpf.trim()) {
+      alert('Por favor, preencha o CPF.');
+      return;
+    }
+
     // Valida CPF
     if (!this.validarCPF(this.cpf)) {
       alert('CPF inválido. Por favor, verifique o número informado.');
       return;
     }
 
+    if (!this.dataNascimento || !this.dataNascimento.trim()) {
+      alert('Por favor, preencha a data de nascimento.');
+      return;
+    }
+
     // Valida idade
     if (!this.validarIdade()) {
       alert('É necessário ter 18 anos ou mais para se cadastrar.');
+      return;
+    }
+
+    if (!this.email || !this.email.trim()) {
+      alert('Por favor, preencha o email.');
+      return;
+    }
+
+    if (!this.telefone || !this.telefone.trim()) {
+      alert('Por favor, preencha o telefone.');
+      return;
+    }
+
+    if (!this.endereco || !this.endereco.trim()) {
+      alert('Por favor, preencha o endereço.');
+      return;
+    }
+
+    if (!this.cep || !this.cep.trim()) {
+      alert('Por favor, preencha o CEP.');
+      return;
+    }
+
+    if (!this.cidade || !this.cidade.trim()) {
+      alert('Por favor, preencha a cidade.');
+      return;
+    }
+
+    if (!this.estado || !this.estado.trim()) {
+      alert('Por favor, selecione o estado.');
+      return;
+    }
+
+    if (!this.pais || !this.pais.trim()) {
+      alert('Por favor, preencha o país.');
+      return;
+    }
+
+    if (!this.senha || !this.senha.trim()) {
+      alert('Por favor, preencha a senha.');
+      return;
+    }
+
+    if (!this.confirmaSenha || !this.confirmaSenha.trim()) {
+      alert('Por favor, confirme a senha.');
       return;
     }
 
