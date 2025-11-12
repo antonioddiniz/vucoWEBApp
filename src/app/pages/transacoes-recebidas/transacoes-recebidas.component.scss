@@ -199,120 +199,7 @@
   }
 }
 
-.produtos {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 12px;
-  gap: 12px;
-  
-  .produto {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 12px;
-    
-    img {
-      width: 80px;
-      height: 80px;
-      object-fit: contain;
-      border-radius: 8px;
-      background-color: #f5f5f5;
-      padding: 4px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      flex-shrink: 0;
-    }
-    
-    .produto-info {
-      flex: 1;
-      text-align: left;
-      min-width: 0;
-      
-      .produto-nome {
-        font-size: 14px;
-        font-weight: 500;
-        margin: 0 0 4px 0;
-        word-break: break-word;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-      }
-      
-      .produto-usuario {
-        font-size: 12px;
-        color: rgba(0, 0, 0, 0.6);
-        margin: 0;
-      }
-    }
-  }
-  
-  .troca-icon {
-    font-size: 28px;
-    color: #4CAF50;
-    flex-shrink: 0;
-    transform: rotate(90deg);
-    margin: 4px 0;
-  }
-}
 
-.transacao-info {
-  margin-bottom: 12px;
-  padding-top: 12px;
-  border-top: 1px solid #e0e0e0;
-  
-  .info-item {
-    margin: 6px 0;
-    font-size: 13px;
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 6px;
-    
-    strong {
-      color: rgba(0, 0, 0, 0.87);
-    }
-    
-    span:not([class*="status-"]) {
-      color: rgba(0, 0, 0, 0.6);
-    }
-    
-    .status-badge {
-      display: inline-flex;
-      align-items: center;
-      
-      span {
-        padding: 4px 10px;
-        border-radius: 12px;
-        font-size: 11px;
-        font-weight: 600;
-        display: inline-block;
-      }
-      
-      .status-concluida {
-        background-color: #4CAF50;
-        color: white;
-      }
-      
-      .status-pendente {
-        background-color: #ff9800;
-        color: white;
-      }
-      
-      .status-cancelada {
-        background-color: #f44336;
-        color: white;
-      }
-      
-      .status-estornada {
-        background-color: #9e9e9e;
-        color: white;
-      }
-    }
-  }
-}
 
 .botoes-transacao {
   display: flex;
@@ -404,40 +291,22 @@
     font-size: 24px;
     font-weight: 500;
     color: rgba(0, 0, 0, 0.87);
-    display: flex;
-    align-items: center;
-    gap: 12px;
     
     &::before {
       content: '⚠️';
       font-size: 28px;
+      margin-right: 12px;
     }
   }
   
   p {
     margin: 0 0 12px 0;
-    font-size: 16px;
     color: rgba(0, 0, 0, 0.7);
-    line-height: 1.5;
-    
-    strong {
-      color: rgba(0, 0, 0, 0.87);
-      font-weight: 600;
-    }
   }
   
   .warning-text {
     color: #dc3545;
-    font-size: 14px;
     font-weight: 500;
-    margin-bottom: 24px;
-  }
-  
-  .info-text {
-    color: #2196F3;
-    font-size: 14px;
-    font-weight: 500;
-    margin-bottom: 24px;
   }
   
   &.modal-detalhes {
@@ -446,16 +315,7 @@
     margin: 20px;
     max-height: calc(100vh - 40px);
     overflow-y: auto;
-    // Melhora performance de animação
     backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-    transform-style: preserve-3d;
-    -webkit-transform-style: preserve-3d;
-    
-    // Remove box-shadow durante swipe para melhor performance
-    &[style*="translateX"] {
-      box-shadow: -10px 0 30px rgba(0, 0, 0, 0.3);
-    }
     
     h3::before {
       content: '';
@@ -468,55 +328,6 @@
   gap: 12px;
   justify-content: flex-end;
   margin-top: 24px;
-  
-  button {
-    padding: 10px 24px;
-    border-radius: 8px;
-    font-weight: 500;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    border: none;
-    
-    &[color="warn"] {
-      background-color: #dc3545;
-      color: white;
-      
-      &:hover {
-        background-color: #c82333;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
-      }
-      
-      &:active {
-        transform: translateY(0);
-      }
-    }
-    
-    &[color="primary"] {
-      background-color: #4CAF50;
-      color: white;
-      
-      &:hover {
-        background-color: #45a049;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
-      }
-      
-      &:active {
-        transform: translateY(0);
-      }
-    }
-    
-    &:not([color]) {
-      background-color: transparent;
-      color: rgba(0, 0, 0, 0.6);
-      
-      &:hover {
-        background-color: rgba(0, 0, 0, 0.04);
-      }
-    }
-  }
 }
 
 .modal-header {
