@@ -185,6 +185,34 @@
     border-color: #004C99;
     background-color: rgba(0, 76, 153, 0.08);
     box-shadow: 0 2px 8px rgba(0, 76, 153, 0.3);
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      width: 28px;
+      height: 28px;
+      background-color: #004C99;
+      border-radius: 50%;
+      z-index: 1;
+    }
+    
+    &::after {
+      content: '✓';
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 18px;
+      z-index: 2;
+    }
   }
   
   .checkbox-wrapper {
@@ -277,10 +305,7 @@
   justify-content: center;
   padding: 24px 0;
   padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
-  position: sticky;
-  bottom: 0;
-  background-color: #fff;
-  z-index: 10;
+  margin-top: 16px;
 }
 
 .submit-btn {
