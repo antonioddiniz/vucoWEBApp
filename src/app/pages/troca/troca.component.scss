@@ -36,6 +36,7 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 16px;
+  padding-top: calc(env(safe-area-inset-top, 0px) + 16px); // Safe area + padding normal
   box-sizing: border-box;
   background-color: #fff;
   min-height: 100vh;
