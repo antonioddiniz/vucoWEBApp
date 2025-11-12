@@ -5,18 +5,12 @@ import { switchMap } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 import { environment } from '../../environments/environment';
 
-interface Produto {
-  id: number;
-  nome: string;
-}
-
 interface Transacao {
   idUsuario1: number;
   idUsuario2: number;
-  produtosUsuario1: Produto[];
-  produtosUsuario2: Produto[];
-  dataTransacao: string;
-  status: number;
+  produtosUsuario1: number[];  // Array de IDs dos produtos
+  produtosUsuario2: number[];  // Array de IDs dos produtos
+  transacaoOriginalId?: number | null;
 }
 
 @Injectable({

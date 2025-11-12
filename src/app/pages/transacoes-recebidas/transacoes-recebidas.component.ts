@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { TransacaoService } from '../../services/transacao.service';
 import { ProdutoService } from '../../services/produto.service';
 import { AuthService } from '../../services/auth.service';
+import { ModalService } from '../../services/modal.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -16,13 +17,24 @@ export class TransacoesRecebidasComponent implements OnInit {
   // Variáveis para controle de exibição do modal de confirmação
   mostrarConfirmacao = false;
   mostrarDeletar = false;
+  mostrarDetalhes = false;
   transacaoSelecionada: any = null;
   produto: any; // Produto selecionado para troca
+  
+  // Variáveis para swipe gesture
+  private touchStartX = 0;
+  private touchEndX = 0;
+  private touchCurrentX = 0;
+  private minSwipeDistance = 100; // Distância mínima em pixels para considerar um swipe
+  modalTransform = 'translateX(0)';
+  modalOpacity = 1;
+  isSwipingModal = false;
 
   constructor(
     private transacaoService: TransacaoService,
     private produtoService: ProdutoService,
     private authService: AuthService, // Serviço de autenticação
+    private modalService: ModalService, // Serviço de modal
     private router: Router // Serviço de navegação
   ) {}
 
@@ -51,30 +63,17 @@ export class TransacoesRecebidasComponent implements OnInit {
           return;
         }
 
-        const transacoesComProdutos = transacoes.map(async (transacao: any) => {
-          const [produto1, produto2] = await Promise.all([
-            this.produtoService.getProdutoById(transacao.produtoUsuario1Id).toPromise(),
-            this.produtoService.getProdutoById(transacao.produtoUsuario2Id).toPromise()
-          ]);
-
-          return {
-            ...transacao,
-            produtoUsuario1: produto1,
-            produtoUsuario2: produto2
-          };
+        // As transações já vêm com transacaoProdutos do backend
+        // Ordena por data mais recente primeiro
+        this.transacoes = transacoes.sort((a: any, b: any) => {
+          const dataA = new Date(a.dataTransacao).getTime();
+          const dataB = new Date(b.dataTransacao).getTime();
+          return dataB - dataA;
         });
 
-        Promise.all(transacoesComProdutos).then((completas) => {
-          // Ordena por data mais recente primeiro
-          this.transacoes = completas.sort((a, b) => {
-            const dataA = new Date(a.dataTransacao).getTime();
-            const dataB = new Date(b.dataTransacao).getTime();
-            return dataB - dataA; // Ordem decrescente (mais recente primeiro)
-          });
-        });
+        console.log('Transações carregadas:', this.transacoes);
       },
       error: (error) => {
-        // Se for erro 404, significa que não há transações com esse status
         if (error.status === 404) {
           console.log('Nenhuma transação encontrada com status:', status);
           this.transacoes = [];
@@ -84,6 +83,30 @@ export class TransacoesRecebidasComponent implements OnInit {
         }
       }
     });
+  }
+
+  // Retorna produtos do outro usuário (para exibir o que você vai receber)
+  getProdutosOutroUsuario(transacao: any): any[] {
+    if (!transacao.transacaoProdutos) return [];
+    
+    // Se eu sou Usuario1, quero ver os produtos do Usuario2 (UsuarioTipo = false)
+    // Se eu sou Usuario2, quero ver os produtos do Usuario1 (UsuarioTipo = true)
+    const souUsuario1 = this.usuarioLogadoId === transacao.idUsuario1;
+    
+    return transacao.transacaoProdutos
+      .filter((tp: any) => tp.usuarioTipo === souUsuario1 ? false : true)
+      .map((tp: any) => tp.produto);
+  }
+
+  // Retorna meus produtos (que estou oferecendo)
+  getMeusProdutos(transacao: any): any[] {
+    if (!transacao.transacaoProdutos) return [];
+    
+    const souUsuario1 = this.usuarioLogadoId === transacao.idUsuario1;
+    
+    return transacao.transacaoProdutos
+      .filter((tp: any) => tp.usuarioTipo === souUsuario1 ? true : false)
+      .map((tp: any) => tp.produto);
   }
 
   aceitarTransacao(transacao: any): void {
@@ -192,6 +215,81 @@ export class TransacoesRecebidasComponent implements OnInit {
   cancelarDeletar(): void {
     this.mostrarDeletar = false;
     this.transacaoSelecionada = null;
+  }
+
+  abrirDetalhes(transacao: any): void {
+    this.transacaoSelecionada = transacao;
+    this.mostrarDetalhes = true;
+    this.resetModalTransform();
+  }
+
+  fecharDetalhes(): void {
+    this.mostrarDetalhes = false;
+    this.transacaoSelecionada = null;
+    this.resetModalTransform();
+  }
+  
+  private resetModalTransform(): void {
+    this.modalTransform = 'translateX(0)';
+    this.modalOpacity = 1;
+    this.isSwipingModal = false;
+  }
+  
+  // Métodos para swipe gesture
+  onTouchStart(event: TouchEvent): void {
+    this.touchStartX = event.changedTouches[0].screenX;
+    this.touchCurrentX = this.touchStartX;
+    this.isSwipingModal = true;
+  }
+  
+  onTouchMove(event: TouchEvent): void {
+    if (!this.isSwipingModal) return;
+    
+    this.touchCurrentX = event.changedTouches[0].screenX;
+    const diff = this.touchCurrentX - this.touchStartX;
+    
+    // Apenas permite swipe para direita
+    if (diff > 0) {
+      // Usa toda a distância sem resistência para tornar mais perceptível
+      const translateX = diff;
+      
+      // Calcula opacidade baseada na distância (fade out mais agressivo)
+      const opacity = Math.max(0, 1 - (diff / 300));
+      
+      this.modalTransform = `translateX(${translateX}px)`;
+      this.modalOpacity = opacity;
+    }
+  }
+  
+  onTouchEnd(event: TouchEvent): void {
+    this.touchEndX = event.changedTouches[0].screenX;
+    this.isSwipingModal = false;
+    this.handleSwipe();
+  }
+  
+  private handleSwipe(): void {
+    const swipeDistance = this.touchEndX - this.touchStartX;
+    
+    // Swipe da esquerda para direita (fechar modal)
+    if (swipeDistance > this.minSwipeDistance) {
+      // Anima para fora antes de fechar
+      this.modalTransform = 'translateX(100vw)';
+      this.modalOpacity = 0;
+      
+      setTimeout(() => {
+        this.fecharDetalhes();
+      }, 300);
+    } else {
+      // Volta para posição original com animação
+      this.modalTransform = 'translateX(0)';
+      this.modalOpacity = 1;
+    }
+  }
+  
+  // Abre modal de detalhes do produto
+  abrirDetalhesProduto(produtoId: number, event: Event): void {
+    event.stopPropagation();
+    this.modalService.openDetalhesModal(produtoId);
   }
 
   onImageError(event: Event): void {

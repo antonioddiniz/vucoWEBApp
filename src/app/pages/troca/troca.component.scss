@@ -73,8 +73,27 @@
 .section-title {
   font-size: 18px;
   font-weight: 500;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   color: rgba(0, 0, 0, 0.87);
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  
+  .count-badge {
+    font-size: 14px;
+    background-color: #004C99;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-weight: 600;
+  }
+}
+
+.section-description {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.6);
+  margin-bottom: 16px;
   padding: 0 8px;
 }
 
@@ -113,6 +132,13 @@
   padding: 0 8px;
 }
 
+.itens-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px;
+  padding: 0 8px;
+}
+
 .item-card {
   display: flex;
   flex-direction: column;
@@ -134,6 +160,53 @@
     border-color: #004C99;
     background-color: rgba(0, 76, 153, 0.05);
     box-shadow: 0 2px 8px rgba(0, 76, 153, 0.2);
+  }
+}
+
+.item-card-checkbox {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  background-color: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    border-color: #004C99;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  &.selected {
+    border-color: #004C99;
+    background-color: rgba(0, 76, 153, 0.08);
+    box-shadow: 0 2px 8px rgba(0, 76, 153, 0.3);
+  }
+  
+  .checkbox-wrapper {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 2;
+    
+    ::ng-deep .mat-checkbox {
+      .mat-checkbox-frame {
+        border-color: #004C99;
+        border-width: 2px;
+      }
+      
+      .mat-checkbox-background {
+        background-color: #004C99;
+      }
+      
+      &.mat-checkbox-checked .mat-checkbox-background {
+        background-color: #004C99;
+      }
+    }
   }
   
   .item-image {
@@ -166,12 +239,37 @@
   }
 }
 
+.summary-section {
+  margin-bottom: 24px;
+  
+  .summary-box {
+    background-color: #f0f7ff;
+    border: 2px solid #004C99;
+    border-radius: 12px;
+    padding: 16px;
+    margin: 0 8px;
+    
+    .summary-text {
+      margin: 0;
+      font-size: 15px;
+      color: rgba(0, 0, 0, 0.87);
+      text-align: center;
+      line-height: 1.6;
+      
+      strong {
+        color: #004C99;
+      }
+    }
+  }
+}
+
 .empty-message {
   text-align: center;
   color: rgba(0, 0, 0, 0.6);
   padding: 24px;
   background-color: #f5f5f5;
   border-radius: 8px;
+  margin: 0 8px;
 }
 
 .actions-section {
@@ -234,7 +332,13 @@
     gap: 8px;
   }
   
-  .item-card {
+  .itens-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+  }
+  
+  .item-card,
+  .item-card-checkbox {
     padding: 8px;
     
     .item-image {

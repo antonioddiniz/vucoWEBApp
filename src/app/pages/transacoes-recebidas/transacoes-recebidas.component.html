@@ -22,32 +22,42 @@
   </div>
 
   <div class="transacoes-grid">
-    <div *ngFor="let transacao of transacoes" class="transacao-card">
-      <div class="produtos">
-        <div class="produto produto-enviado">
-          <img 
-            [src]="transacao.produtoUsuario1?.imagem" 
-            [alt]="transacao.produtoUsuario1?.nome"
-            (error)="onImageError($event)"
-          />
-          <div class="produto-info">
-            <p class="produto-nome"><strong>{{ transacao.produtoUsuario1?.nome }}</strong></p>
-            <p class="produto-usuario">De: Usuário {{ transacao.idUsuario1 }}</p>
+    <div *ngFor="let transacao of transacoes" class="transacao-card" (click)="abrirDetalhes(transacao)">
+      <div class="produtos-multiplos">
+        <!-- Meus Produtos (que estou oferecendo) -->
+        <div class="produtos-lado">
+          <h4 class="lado-titulo">Você oferece:</h4>
+          <div class="produtos-lista">
+            <div *ngFor="let produto of getMeusProdutos(transacao)" class="produto-mini">
+              <img 
+                [src]="produto.imagem" 
+                [alt]="produto.nome"
+                (error)="onImageError($event)"
+              />
+              <p class="produto-nome-mini">{{ produto.nome }}</p>
+            </div>
+            <p *ngIf="getMeusProdutos(transacao).length === 0" class="sem-produtos">Nenhum produto</p>
           </div>
+          <span class="count-badge">{{ getMeusProdutos(transacao).length }} item(ns)</span>
         </div>
 
-        <div class="troca-icon">⇄</div>
+        <div class="troca-icon-grande">⇄</div>
 
-        <div class="produto produto-recebido">
-          <img 
-            [src]="transacao.produtoUsuario2?.imagem" 
-            [alt]="transacao.produtoUsuario2?.nome"
-            (error)="onImageError($event)"
-          />
-          <div class="produto-info">
-            <p class="produto-nome"><strong>{{ transacao.produtoUsuario2?.nome }}</strong></p>
-            <p class="produto-usuario">Para: Você</p>
+        <!-- Produtos do outro usuário (que vou receber) -->
+        <div class="produtos-lado">
+          <h4 class="lado-titulo">Você recebe:</h4>
+          <div class="produtos-lista">
+            <div *ngFor="let produto of getProdutosOutroUsuario(transacao)" class="produto-mini">
+              <img 
+                [src]="produto.imagem" 
+                [alt]="produto.nome"
+                (error)="onImageError($event)"
+              />
+              <p class="produto-nome-mini">{{ produto.nome }}</p>
+            </div>
+            <p *ngIf="getProdutosOutroUsuario(transacao).length === 0" class="sem-produtos">Nenhum produto</p>
           </div>
+          <span class="count-badge">{{ getProdutosOutroUsuario(transacao).length }} item(ns)</span>
         </div>
       </div>
 
@@ -71,19 +81,19 @@
       <div class="botoes-transacao" *ngIf="statusSelecionado === 2">
         <!-- Se o usuário logado foi quem enviou a transação, mostra apenas o botão de cancelar -->
         <ng-container *ngIf="isUsuarioEnviou(transacao); else botoesRecebedor">
-          <button class="btn-recusar" (click)="abrirDeletar(transacao)">
+          <button class="btn-recusar" (click)="$event.stopPropagation(); abrirDeletar(transacao)">
             Cancelar
           </button>
         </ng-container>
         <!-- Se o usuário logado recebeu a transação, mostra todos os botões -->
         <ng-template #botoesRecebedor>
-          <button class="btn-aceitar" (click)="abrirConfirmacao(transacao)">
+          <button class="btn-aceitar" (click)="$event.stopPropagation(); abrirConfirmacao(transacao)">
             Aceitar
           </button>
-          <button class="btn-contraproposta" (click)="oferecerTroca(transacao)">
+          <button class="btn-contraproposta" (click)="$event.stopPropagation(); oferecerTroca(transacao)">
             Contraproposta
           </button>
-          <button class="btn-recusar" (click)="abrirDeletar(transacao)">
+          <button class="btn-recusar" (click)="$event.stopPropagation(); abrirDeletar(transacao)">
             Cancelar
           </button>
         </ng-template>
@@ -117,3 +127,100 @@
     </div>
   </div>
 </div>
+
+<!-- Modal de Detalhes -->
+<div class="modal modal-swipeable" *ngIf="mostrarDetalhes" (click)="fecharDetalhes()" 
+     [style.opacity]="modalOpacity"
+     [style.transition]="isSwipingModal ? 'none' : 'opacity 0.3s ease'">
+  <div class="modal-content modal-detalhes" 
+       (click)="$event.stopPropagation()" 
+       (touchstart)="onTouchStart($event)"
+       (touchmove)="onTouchMove($event)" 
+       (touchend)="onTouchEnd($event)"
+       [style.transform]="modalTransform"
+       [style.transition]="isSwipingModal ? 'none' : 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)'"  
+       [style.will-change]="isSwipingModal ? 'transform' : 'auto'">
+    <div class="modal-header">
+      <h3>Detalhes da Transação</h3>
+      <button mat-icon-button (click)="fecharDetalhes()" class="close-btn">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <div class="modal-body" *ngIf="transacaoSelecionada">
+      <!-- Informações da Transação -->
+      <div class="info-section">
+        <p><strong>ID:</strong> #{{ transacaoSelecionada.id }}</p>
+        <p><strong>Data:</strong> {{ transacaoSelecionada.dataTransacao | date:'dd/MM/yyyy HH:mm' }}</p>
+        <p>
+          <strong>Status:</strong> 
+          <span [ngSwitch]="transacaoSelecionada.status" class="status-badge">
+            <span *ngSwitchCase="1" class="status-concluida">Concluída</span>
+            <span *ngSwitchCase="2" class="status-pendente">Pendente</span>
+            <span *ngSwitchCase="3" class="status-cancelada">Cancelada</span>
+            <span *ngSwitchCase="4" class="status-estornada">Estornada</span>
+            <span *ngSwitchDefault>Desconhecido</span>
+          </span>
+        </p>
+      </div>
+
+      <!-- Produtos Envolvidos -->
+      <div class="produtos-detalhes">
+        <div class="lado-detalhes">
+          <h4>{{ isUsuarioEnviou(transacaoSelecionada) ? 'Você oferece' : 'Outro usuário oferece' }}:</h4>
+          <div class="produtos-lista-detalhes">
+            <div *ngFor="let produto of getMeusProdutos(transacaoSelecionada)" 
+                 class="produto-detalhe produto-clicavel" 
+                 (click)="abrirDetalhesProduto(produto.id, $event)">
+              <img [src]="produto.imagem" [alt]="produto.nome" (error)="onImageError($event)">
+              <div class="produto-info-detalhe">
+                <p class="nome">{{ produto.nome }}</p>
+                <p class="descricao" *ngIf="produto.descricao">{{ produto.descricao }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="lado-detalhes">
+          <h4>{{ isUsuarioEnviou(transacaoSelecionada) ? 'Outro usuário oferece' : 'Você oferece' }}:</h4>
+          <div class="produtos-lista-detalhes">
+            <div *ngFor="let produto of getProdutosOutroUsuario(transacaoSelecionada)" 
+                 class="produto-detalhe produto-clicavel" 
+                 (click)="abrirDetalhesProduto(produto.id, $event)">
+              <img [src]="produto.imagem" [alt]="produto.nome" (error)="onImageError($event)">
+              <div class="produto-info-detalhe">
+                <p class="nome">{{ produto.nome }}</p>
+                <p class="descricao" *ngIf="produto.descricao">{{ produto.descricao }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botões de Ação -->
+      <div class="modal-actions" *ngIf="statusSelecionado === 2">
+        <ng-container *ngIf="isUsuarioEnviou(transacaoSelecionada); else botoesModalRecebedor">
+          <button mat-raised-button color="warn" (click)="fecharDetalhes(); abrirDeletar(transacaoSelecionada)">
+            Cancelar Transação
+          </button>
+        </ng-container>
+        <ng-template #botoesModalRecebedor>
+          <button mat-raised-button color="primary" (click)="fecharDetalhes(); abrirConfirmacao(transacaoSelecionada)">
+            Aceitar
+          </button>
+          <button mat-raised-button color="accent" (click)="fecharDetalhes(); oferecerTroca(transacaoSelecionada)">
+            Contraproposta
+          </button>
+          <button mat-raised-button color="warn" (click)="fecharDetalhes(); abrirDeletar(transacaoSelecionada)">
+            Cancelar
+          </button>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Detalhes do Produto -->
+<app-detalhes-produto></app-detalhes-produto>

@@ -14,6 +14,7 @@ interface Produto {
   nome: string;
   imagem: string;
   usuarioId?: number;
+  descricao?: string;
 }
 
 @Component({
@@ -23,8 +24,11 @@ interface Produto {
 })
 export class TrocaComponent implements OnInit, OnDestroy {
   produtoDesejado: Produto | null = null;
+  produtosOutroUsuario: Produto[] = [];  // NOVO: todos os produtos do outro usuário
   meusItens: Produto[] = [];
-  meuItemSelecionado: Produto | null = null;
+  meuItemSelecionado: Produto | null = null;  // Mantido para compatibilidade
+  meusItensSelecionados: number[] = [];  // NOVO: IDs dos meus produtos selecionados
+  produtosOutroUsuarioSelecionados: number[] = [];  // NOVO: IDs dos produtos do outro usuário selecionados
   loggedUserId: number | null = null;
   previousUrl: string = '/lista-produto';
   previousQueryParams: any = {};
@@ -118,9 +122,33 @@ export class TrocaComponent implements OnInit, OnDestroy {
       (produto) => {
         console.log('🐛 [TrocaComponent] Produto carregado:', produto);
         this.produtoDesejado = produto;
+        // Pré-seleciona o produto desejado
+        this.produtosOutroUsuarioSelecionados = [produto.id];
+        
+        // Carrega todos os produtos do outro usuário
+        if (produto.usuarioId) {
+          this.carregarProdutosOutroUsuario(produto.usuarioId);
+        }
       },
       (error) => {
         console.error('❌ [TrocaComponent] Erro ao carregar o produto desejado:', error);
+      }
+    );
+  }
+
+  carregarProdutosOutroUsuario(usuarioId: number) {
+    this.produtoService.getProdutosByUsuarioId(usuarioId).subscribe(
+      (produtos) => {
+        this.produtosOutroUsuario = produtos.map(p => ({
+          id: p.id,
+          nome: p.nome,
+          imagem: p.imagem,
+          usuarioId: p.usuarioId,
+          descricao: p.descricao
+        }));
+      },
+      (error) => {
+        console.error('Erro ao carregar produtos do outro usuário:', error);
       }
     );
   }
@@ -142,17 +170,49 @@ export class TrocaComponent implements OnInit, OnDestroy {
   }
 
   selecionarMeuItem(item: Produto) {
-    this.meuItemSelecionado = item;
+    this.meuItemSelecionado = item;  // Mantido para compatibilidade
+  }
+
+  toggleMeuItem(produtoId: number) {
+    const index = this.meusItensSelecionados.indexOf(produtoId);
+    if (index > -1) {
+      this.meusItensSelecionados.splice(index, 1);
+    } else {
+      this.meusItensSelecionados.push(produtoId);
+    }
+  }
+
+  toggleProdutoOutroUsuario(produtoId: number) {
+    const index = this.produtosOutroUsuarioSelecionados.indexOf(produtoId);
+    if (index > -1) {
+      this.produtosOutroUsuarioSelecionados.splice(index, 1);
+    } else {
+      this.produtosOutroUsuarioSelecionados.push(produtoId);
+    }
+  }
+
+  isProdutoSelecionado(produtoId: number, lista: number[]): boolean {
+    return lista.includes(produtoId);
   }
 
   submeterProposta() {
-    if (!this.meuItemSelecionado || !this.produtoDesejado || !this.loggedUserId) {
-      alert('Por favor, selecione um item para oferecer na troca.');
+    // Validações
+    if (!this.loggedUserId) {
+      alert('Erro: Usuário não identificado.');
       return;
     }
 
-    // Verifica se o produto desejado tem usuarioId
-    if (!this.produtoDesejado.usuarioId) {
+    if (this.meusItensSelecionados.length === 0) {
+      alert('Por favor, selecione pelo menos um dos seus produtos para oferecer.');
+      return;
+    }
+
+    if (this.produtosOutroUsuarioSelecionados.length === 0) {
+      alert('Por favor, selecione pelo menos um produto do outro usuário.');
+      return;
+    }
+
+    if (!this.produtoDesejado || !this.produtoDesejado.usuarioId) {
       alert('Erro: Produto sem informação do dono.');
       return;
     }
@@ -160,17 +220,17 @@ export class TrocaComponent implements OnInit, OnDestroy {
     const transacao = {
       idUsuario1: this.loggedUserId,
       idUsuario2: this.produtoDesejado.usuarioId,
-      produtoUsuario1Id: this.meuItemSelecionado.id,
-      produtoUsuario2Id: this.produtoDesejado.id,
-      dataTransacao: new Date().toISOString(),
-      status: 2, // Status da transação (2 para proposta pendente)
-      produtosUsuario1: [this.meuItemSelecionado],
-      produtosUsuario2: [this.produtoDesejado]
+      produtosUsuario1: this.meusItensSelecionados,  // Array de IDs
+      produtosUsuario2: this.produtosOutroUsuarioSelecionados,  // Array de IDs
+      transacaoOriginalId: null
     };
+
+    console.log('📤 Enviando transação:', transacao);
 
     this.transacaoService.registrarTransacao(transacao).subscribe(
       (response) => {
-        alert('Proposta enviada com sucesso!');
+        console.log('✅ Transação registrada:', response);
+        alert(`Proposta enviada com sucesso!\n${this.meusItensSelecionados.length} produto(s) seus por ${this.produtosOutroUsuarioSelecionados.length} produto(s) do outro usuário.`);
         if (this.isModalOpen) {
           this.closeModal();
         } else {
@@ -178,17 +238,20 @@ export class TrocaComponent implements OnInit, OnDestroy {
         }
       },
       (error) => {
-        console.error('Erro ao registrar transação:', error);
-        alert('Houve um erro ao enviar a proposta.');
+        console.error('❌ Erro ao registrar transação:', error);
+        alert('Houve um erro ao enviar a proposta. Tente novamente.');
       }
     );
   }
   
   closeModal(): void {
     this.modalService.closeTrocaModal();
-    // Limpa seleção
+    // Limpa seleções
     this.meuItemSelecionado = null;
     this.produtoDesejado = null;
+    this.meusItensSelecionados = [];
+    this.produtosOutroUsuarioSelecionados = [];
+    this.produtosOutroUsuario = [];
   }
 
   goBack(): void {

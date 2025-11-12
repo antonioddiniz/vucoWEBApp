@@ -20,6 +20,10 @@ export class ProdutoService {
     return this.http.get<any>(`${this.usuariosUrl}/${id}`);
   }
 
+  getProdutosByUsuarioId(usuarioId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.apiUrl}/v1/produtos/usuario/${usuarioId}`);
+  }
+
   deleteProduto(id: number): Observable<any> {
     return this.http.delete<any>(`${environment.apiUrl}/v1/deletarProduto/${id}`);
   }

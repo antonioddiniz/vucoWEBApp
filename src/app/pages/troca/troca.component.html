@@ -15,35 +15,78 @@
     <h2 class="troca-title">Oferecer Troca</h2>
   </div>
 
-  <!-- Produto que o usuário deseja -->
+  <!-- Produtos do outro usuário (para selecionar) -->
   <div class="produto-section">
-    <h3 class="section-title">Produto Desejado</h3>
-    <div class="produto-card" *ngIf="produtoDesejado">
-      <img [src]="produtoDesejado.imagem" [alt]="produtoDesejado.nome" class="produto-image">
-      <div class="produto-info">
-        <h4>{{ produtoDesejado.nome }}</h4>
-      </div>
-    </div>
-    <p *ngIf="!produtoDesejado" class="empty-message">Nenhum produto selecionado.</p>
-  </div>
-
-  <!-- Produto que o usuário está oferecendo -->
-  <div class="produto-section">
-    <h3 class="section-title">Selecione seu produto para trocar</h3>
-    <div class="itens-list">
+    <h3 class="section-title">
+      Produtos do outro usuário
+      <span class="count-badge" *ngIf="produtosOutroUsuarioSelecionados.length > 0">
+        {{ produtosOutroUsuarioSelecionados.length }} selecionado(s)
+      </span>
+    </h3>
+    <p class="section-description">Selecione um ou mais produtos que você deseja receber:</p>
+    
+    <div class="itens-grid">
       <div 
-        class="item-card" 
-        *ngFor="let item of meusItens"
-        [class.selected]="meuItemSelecionado?.id === item.id"
-        (click)="selecionarMeuItem(item)">
+        class="item-card-checkbox" 
+        *ngFor="let item of produtosOutroUsuario"
+        [class.selected]="isProdutoSelecionado(item.id, produtosOutroUsuarioSelecionados)"
+        (click)="toggleProdutoOutroUsuario(item.id)">
+        <div class="checkbox-wrapper">
+          <mat-checkbox 
+            [checked]="isProdutoSelecionado(item.id, produtosOutroUsuarioSelecionados)"
+            (click)="$event.stopPropagation()"
+            (change)="toggleProdutoOutroUsuario(item.id)">
+          </mat-checkbox>
+        </div>
         <img [src]="item.imagem" [alt]="item.nome" class="item-image">
         <div class="item-info">
           <span class="item-name">{{ item.nome }}</span>
-          <span *ngIf="meuItemSelecionado?.id === item.id" class="selected-badge">Selecionado</span>
+        </div>
+      </div>
+    </div>
+    <p *ngIf="produtosOutroUsuario.length === 0" class="empty-message">Carregando produtos...</p>
+  </div>
+
+  <!-- Meus produtos (para oferecer) -->
+  <div class="produto-section">
+    <h3 class="section-title">
+      Seus produtos
+      <span class="count-badge" *ngIf="meusItensSelecionados.length > 0">
+        {{ meusItensSelecionados.length }} selecionado(s)
+      </span>
+    </h3>
+    <p class="section-description">Selecione um ou mais produtos que você quer oferecer:</p>
+    
+    <div class="itens-grid">
+      <div 
+        class="item-card-checkbox" 
+        *ngFor="let item of meusItens"
+        [class.selected]="isProdutoSelecionado(item.id, meusItensSelecionados)"
+        (click)="toggleMeuItem(item.id)">
+        <div class="checkbox-wrapper">
+          <mat-checkbox 
+            [checked]="isProdutoSelecionado(item.id, meusItensSelecionados)"
+            (click)="$event.stopPropagation()"
+            (change)="toggleMeuItem(item.id)">
+          </mat-checkbox>
+        </div>
+        <img [src]="item.imagem" [alt]="item.nome" class="item-image">
+        <div class="item-info">
+          <span class="item-name">{{ item.nome }}</span>
         </div>
       </div>
     </div>
     <p *ngIf="meusItens.length === 0" class="empty-message">Você não possui produtos cadastrados.</p>
+  </div>
+
+  <!-- Resumo e botão -->
+  <div class="summary-section" *ngIf="meusItensSelecionados.length > 0 || produtosOutroUsuarioSelecionados.length > 0">
+    <div class="summary-box">
+      <p class="summary-text">
+        <strong>Resumo:</strong> Você está oferecendo <strong>{{ meusItensSelecionados.length }}</strong> produto(s)
+        em troca de <strong>{{ produtosOutroUsuarioSelecionados.length }}</strong> produto(s)
+      </p>
+    </div>
   </div>
 
   <!-- Botão para submeter a proposta -->
@@ -51,7 +94,7 @@
     <button 
       class="submit-btn" 
       (click)="submeterProposta()"
-      [disabled]="!meuItemSelecionado || !produtoDesejado">
+      [disabled]="meusItensSelecionados.length === 0 || produtosOutroUsuarioSelecionados.length === 0">
       Enviar Proposta de Troca
     </button>
   </div>
