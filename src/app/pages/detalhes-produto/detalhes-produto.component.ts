@@ -267,12 +267,18 @@ export class DetalhesProdutoComponent implements OnInit, OnDestroy {
   getImagensCarrossel(): string[] {
     if (!this.produto) return [];
     
+    console.log('Produto completo:', this.produto);
+    console.log('Imagens do produto:', this.produto.imagens);
+    
     // Se tem array de imagens, usa ele
     if (this.produto.imagens && this.produto.imagens.length > 0) {
-      return this.produto.imagens.map((img: any) => img.url);
+      const urls = this.produto.imagens.map((img: any) => img.url);
+      console.log('URLs das imagens:', urls);
+      return urls;
     }
     
     // Senão, usa imagem principal
+    console.log('Usando imagem principal:', this.produto.imagem);
     return this.produto.imagem ? [this.produto.imagem] : [];
   }
   
