@@ -39,6 +39,8 @@
   box-sizing: border-box;
   background-color: #fff;
   min-height: 100vh;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .header-actions {

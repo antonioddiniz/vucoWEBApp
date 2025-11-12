@@ -1,11 +1,17 @@
 <!-- Modal Overlay -->
-<div class="modal-overlay" *ngIf="isModalOpen" (click)="closeModal()"></div>
+<div class="modal-overlay" *ngIf="isModalOpen" (click)="closeModal()"
+     [style.opacity]="modalOpacity"
+     [style.transition]="isSwipingModal ? 'none' : 'opacity 0.3s ease'"></div>
 
 <!-- Modal Container -->
 <div class="modal-container" 
      [class.modal-open]="isModalOpen"
      (touchstart)="onTouchStart($event)"
-     (touchend)="onTouchEnd($event)">
+     (touchmove)="onTouchMove($event)"
+     (touchend)="onTouchEnd($event)"
+     [style.transform]="modalTransform"
+     [style.transition]="isSwipingModal ? 'none' : 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)'"
+     [style.will-change]="isSwipingModal ? 'transform' : 'auto'">
   <div class="produto-detalhes-container" *ngIf="produto">
   <mat-card class="produto-detalhes-card">
     <!-- Header com botão voltar -->

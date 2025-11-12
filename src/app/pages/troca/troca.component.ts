@@ -38,6 +38,10 @@ export class TrocaComponent implements OnInit, OnDestroy {
   private touchStartY: number = 0;
   private touchEndX: number = 0;
   private touchEndY: number = 0;
+  private touchCurrentX: number = 0;
+  modalTransform = 'translateX(0)';
+  modalOpacity = 1;
+  isSwipingModal = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -252,6 +256,13 @@ export class TrocaComponent implements OnInit, OnDestroy {
     this.meusItensSelecionados = [];
     this.produtosOutroUsuarioSelecionados = [];
     this.produtosOutroUsuario = [];
+    this.resetModalTransform();
+  }
+  
+  private resetModalTransform(): void {
+    this.modalTransform = 'translateX(0)';
+    this.modalOpacity = 1;
+    this.isSwipingModal = false;
   }
 
   goBack(): void {
@@ -274,11 +285,31 @@ export class TrocaComponent implements OnInit, OnDestroy {
   onTouchStart(event: TouchEvent): void {
     this.touchStartX = event.changedTouches[0].screenX;
     this.touchStartY = event.changedTouches[0].screenY;
+    this.touchCurrentX = this.touchStartX;
+    this.isSwipingModal = true;
+  }
+  
+  onTouchMove(event: TouchEvent): void {
+    if (!this.isSwipingModal) return;
+    
+    this.touchCurrentX = event.changedTouches[0].screenX;
+    const diffX = this.touchCurrentX - this.touchStartX;
+    const diffY = Math.abs(event.changedTouches[0].screenY - this.touchStartY);
+    
+    // Apenas permite swipe para direita e se movimento horizontal > vertical
+    if (diffX > 0 && diffX > diffY) {
+      const translateX = diffX;
+      const opacity = Math.max(0, 1 - (diffX / 300));
+      
+      this.modalTransform = `translateX(${translateX}px)`;
+      this.modalOpacity = opacity;
+    }
   }
 
   onTouchEnd(event: TouchEvent): void {
     this.touchEndX = event.changedTouches[0].screenX;
     this.touchEndY = event.changedTouches[0].screenY;
+    this.isSwipingModal = false;
     this.handleSwipe();
   }
 
@@ -288,7 +319,17 @@ export class TrocaComponent implements OnInit, OnDestroy {
     
     // Swipe para a direita (fechar modal) - movimento horizontal > 100px e vertical < 50px
     if (diffX < -100 && absDiffY < 50) {
-      this.closeModal();
+      // Anima para fora antes de fechar
+      this.modalTransform = 'translateX(100vw)';
+      this.modalOpacity = 0;
+      
+      setTimeout(() => {
+        this.closeModal();
+      }, 300);
+    } else {
+      // Volta para posição original com animação
+      this.modalTransform = 'translateX(0)';
+      this.modalOpacity = 1;
     }
   }
 }

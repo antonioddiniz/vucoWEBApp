@@ -37,6 +37,8 @@
   padding: 16px;
   min-height: 100vh;
   background-color: transparent;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .produto-detalhes-card {
