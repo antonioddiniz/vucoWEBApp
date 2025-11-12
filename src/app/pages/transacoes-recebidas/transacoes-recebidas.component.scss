@@ -271,9 +271,12 @@
   padding: 20px;
   
   &.modal-swipeable {
-    // Remove padding para permitir swipe em tela cheia
+    // Remove padding padrão mas adiciona safe area
     padding: 0;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
     overflow: hidden;
+    align-items: flex-start; // Alinha no topo para respeitar safe area
   }
 }
 
@@ -313,7 +316,7 @@
     max-width: 900px;
     width: 95%;
     margin: 20px;
-    margin-top: calc(env(safe-area-inset-top, 0px) + 20px); // Safe area + margem
+    margin-top: 20px; // Modal já tem safe area no padding-top
     max-height: calc(100vh - 40px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
     overflow-y: auto;
     backface-visibility: hidden;
