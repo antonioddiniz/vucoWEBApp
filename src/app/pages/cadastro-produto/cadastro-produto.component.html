@@ -21,7 +21,9 @@
         </label>
         
         <div class="images-grid" *ngIf="base64Images.length > 0; else noImages">
-          <div *ngFor="let img of base64Images; let i = index" class="image-preview-wrapper">
+          <div *ngFor="let img of base64Images; let i = index" 
+               class="image-preview-wrapper"
+               [class.principal]="i === imagemPrincipalIndex">
             <img [src]="img" alt="Preview {{i+1}}" class="preview-image" />
             <button 
               type="button"
@@ -29,7 +31,18 @@
               (click)="removeImage(i)">
               <mat-icon>close</mat-icon>
             </button>
-            <span class="image-badge" *ngIf="i === 0">Principal</span>
+            <button 
+              type="button"
+              class="set-principal-button"
+              *ngIf="i !== imagemPrincipalIndex"
+              (click)="setImagemPrincipal(i)"
+              matTooltip="Definir como principal">
+              <mat-icon>star_outline</mat-icon>
+            </button>
+            <span class="image-badge" *ngIf="i === imagemPrincipalIndex">
+              <mat-icon>star</mat-icon>
+              Principal
+            </span>
           </div>
         </div>
         

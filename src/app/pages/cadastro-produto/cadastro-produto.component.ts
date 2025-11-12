@@ -15,6 +15,7 @@ export class CadastroProdutoComponent implements OnInit {
   userInfo: any;
   base64Image: string | null = null;
   base64Images: string[] = []; // Array de imagens
+  imagemPrincipalIndex: number = 0; // Índice da imagem principal
   isSubmitting: boolean = false;
 
   constructor(
@@ -78,11 +79,19 @@ export class CadastroProdutoComponent implements OnInit {
       // Remove imagem específica
       this.base64Images.splice(index, 1);
       
+      // Ajusta índice da imagem principal se necessário
+      if (index === this.imagemPrincipalIndex) {
+        this.imagemPrincipalIndex = 0;
+      } else if (index < this.imagemPrincipalIndex) {
+        this.imagemPrincipalIndex--;
+      }
+      
       // Atualiza imagem principal
       if (this.base64Images.length > 0) {
-        this.base64Image = this.base64Images[0];
+        this.base64Image = this.base64Images[this.imagemPrincipalIndex];
       } else {
         this.base64Image = null;
+        this.imagemPrincipalIndex = 0;
         this.productForm.patchValue({ imagem: null });
         this.productForm.get('imagem')?.setErrors({ required: true });
       }
@@ -90,9 +99,15 @@ export class CadastroProdutoComponent implements OnInit {
       // Remove todas as imagens
       this.base64Image = null;
       this.base64Images = [];
+      this.imagemPrincipalIndex = 0;
       this.productForm.patchValue({ imagem: null });
       this.productForm.get('imagem')?.setErrors({ required: true });
     }
+  }
+  
+  setImagemPrincipal(index: number): void {
+    this.imagemPrincipalIndex = index;
+    this.base64Image = this.base64Images[index];
   }
 
   cancel(): void {
@@ -109,11 +124,18 @@ export class CadastroProdutoComponent implements OnInit {
     if (this.userInfo && this.userInfo.id !== null && this.base64Images.length > 0) {
       this.isSubmitting = true;
       
+      // Reordena array colocando imagem principal primeiro
+      const imagensOrdenadas = [...this.base64Images];
+      if (this.imagemPrincipalIndex !== 0) {
+        const imagemPrincipal = imagensOrdenadas.splice(this.imagemPrincipalIndex, 1)[0];
+        imagensOrdenadas.unshift(imagemPrincipal);
+      }
+      
       const productData = {
         ...this.productForm.value,
         usuarioId: this.userInfo.id,
-        imagem: this.base64Images[0], // Primeira imagem como principal
-        imagens: this.base64Images // Array de todas as imagens
+        imagem: imagensOrdenadas[0], // Imagem principal
+        imagens: imagensOrdenadas // Array com imagem principal primeiro
       };
       
       console.log('productData', productData);
