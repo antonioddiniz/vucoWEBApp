@@ -3,12 +3,21 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
+interface ProdutoImagem {
+  id: number;
+  produtoId: number;
+  url: string;
+  ordem: number;
+  dataCriacao: string;
+}
+
 interface Produto {
   id: number;
   nome: string;
   descricao: string;
   categoria: string;
   imagem: string;
+  imagens?: ProdutoImagem[];
   status: number;
   dataDeCriacao: string;
   dataDeAlteracao: string;

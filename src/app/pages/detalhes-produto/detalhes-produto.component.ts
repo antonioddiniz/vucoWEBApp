@@ -29,6 +29,7 @@ export class DetalhesProdutoComponent implements OnInit, OnDestroy {
   modalTransform = 'translateX(0)';
   modalOpacity = 1;
   isSwipingModal = false;
+  currentImageIndex = 0;
 
   constructor(
     private route: ActivatedRoute,
@@ -84,6 +85,7 @@ export class DetalhesProdutoComponent implements OnInit, OnDestroy {
   }
   
   carregarProduto(id: number): void {
+    this.currentImageIndex = 0; // Reset index ao carregar novo produto
     this.produtoService.getProdutoById(id).subscribe(
       (produto) => {
         this.produto = produto;
@@ -259,5 +261,38 @@ export class DetalhesProdutoComponent implements OnInit, OnDestroy {
       this.modalTransform = 'translateX(0)';
       this.modalOpacity = 1;
     }
+  }
+  
+  // Métodos do carrossel
+  getImagensCarrossel(): string[] {
+    if (!this.produto) return [];
+    
+    // Se tem array de imagens, usa ele
+    if (this.produto.imagens && this.produto.imagens.length > 0) {
+      return this.produto.imagens.map((img: any) => img.url);
+    }
+    
+    // Senão, usa imagem principal
+    return this.produto.imagem ? [this.produto.imagem] : [];
+  }
+  
+  nextImage(): void {
+    const imagens = this.getImagensCarrossel();
+    if (imagens.length > 0) {
+      this.currentImageIndex = (this.currentImageIndex + 1) % imagens.length;
+    }
+  }
+  
+  prevImage(): void {
+    const imagens = this.getImagensCarrossel();
+    if (imagens.length > 0) {
+      this.currentImageIndex = this.currentImageIndex === 0 
+        ? imagens.length - 1 
+        : this.currentImageIndex - 1;
+    }
+  }
+  
+  goToImage(index: number): void {
+    this.currentImageIndex = index;
   }
 }

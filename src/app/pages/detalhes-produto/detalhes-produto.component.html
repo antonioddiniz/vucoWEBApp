@@ -21,14 +21,45 @@
       </button>
     </div>
 
-    <!-- Imagem do produto -->
+    <!-- Carrossel de imagens do produto -->
     <div class="produto-imagem-container">
-      <img 
-        [src]="produto.imagem" 
-        [alt]="produto.nome"
-        (error)="onImageError($event)"
-        class="produto-imagem"
-      />
+      <div class="carousel" *ngIf="getImagensCarrossel().length > 0">
+        <!-- Imagem atual -->
+        <div class="carousel-image-wrapper">
+          <img 
+            [src]="getImagensCarrossel()[currentImageIndex]" 
+            [alt]="produto.nome"
+            (error)="onImageError($event)"
+            class="produto-imagem"
+          />
+        </div>
+        
+        <!-- Botões de navegação -->
+        <button 
+          *ngIf="getImagensCarrossel().length > 1"
+          class="carousel-btn carousel-btn-prev" 
+          (click)="prevImage()"
+          mat-icon-button>
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        <button 
+          *ngIf="getImagensCarrossel().length > 1"
+          class="carousel-btn carousel-btn-next" 
+          (click)="nextImage()"
+          mat-icon-button>
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+        
+        <!-- Indicadores -->
+        <div class="carousel-indicators" *ngIf="getImagensCarrossel().length > 1">
+          <button 
+            *ngFor="let img of getImagensCarrossel(); let i = index"
+            class="indicator"
+            [class.active]="i === currentImageIndex"
+            (click)="goToImage(i)">
+          </button>
+        </div>
+      </div>
     </div>
 
     <mat-card-content class="produto-content">
