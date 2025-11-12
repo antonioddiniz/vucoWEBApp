@@ -13,36 +13,39 @@
 
     <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="product-form">
       
-      <!-- Seção de Imagem -->
+      <!-- Seção de Imagens -->
       <div class="image-section">
         <label class="section-label">
           <mat-icon>image</mat-icon>
-          <span>Imagem do Produto</span>
+          <span>Imagens do Produto (até 5)</span>
         </label>
         
-        <div class="image-upload-container">
-          <div class="image-preview-wrapper" *ngIf="base64Image; else noImage">
-            <img [src]="base64Image" alt="Preview" class="preview-image" />
+        <div class="images-grid" *ngIf="base64Images.length > 0; else noImages">
+          <div *ngFor="let img of base64Images; let i = index" class="image-preview-wrapper">
+            <img [src]="img" alt="Preview {{i+1}}" class="preview-image" />
             <button 
               type="button"
               class="remove-image-button"
-              (click)="removeImage()">
+              (click)="removeImage(i)">
               <mat-icon>close</mat-icon>
             </button>
+            <span class="image-badge" *ngIf="i === 0">Principal</span>
           </div>
-          
-          <ng-template #noImage>
-            <div class="image-placeholder">
-              <mat-icon class="placeholder-icon">add_photo_alternate</mat-icon>
-              <p>Nenhuma imagem selecionada</p>
-            </div>
-          </ng-template>
         </div>
+        
+        <ng-template #noImages>
+          <div class="image-placeholder">
+            <mat-icon class="placeholder-icon">add_photo_alternate</mat-icon>
+            <p>Nenhuma imagem selecionada</p>
+            <p class="hint">Adicione até 5 imagens</p>
+          </div>
+        </ng-template>
         
         <input 
           id="imagem" 
           type="file" 
           accept="image/*"
+          multiple
           (change)="onFileChange($event)"
           class="file-input"
           #fileInput
@@ -51,9 +54,10 @@
           type="button"
           mat-stroked-button 
           class="upload-button"
+          [disabled]="base64Images.length >= 5"
           (click)="fileInput.click()">
           <mat-icon>upload</mat-icon>
-          <span>{{ base64Image ? 'Alterar Imagem' : 'Selecionar Imagem' }}</span>
+          <span>{{ base64Images.length > 0 ? 'Adicionar Mais Imagens' : 'Selecionar Imagens' }}</span>
         </button>
         
         <div class="error-message" *ngIf="productForm.get('imagem')?.invalid && productForm.get('imagem')?.touched">
@@ -153,7 +157,7 @@
           mat-raised-button 
           color="primary" 
           type="submit"
-          [disabled]="productForm.invalid || !base64Image || isSubmitting"
+          [disabled]="productForm.invalid || base64Images.length === 0 || isSubmitting"
           class="submit-button">
           <mat-spinner *ngIf="isSubmitting" diameter="20" class="button-spinner"></mat-spinner>
           <mat-icon *ngIf="!isSubmitting">check_circle</mat-icon>

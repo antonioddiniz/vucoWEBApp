@@ -14,6 +14,7 @@ export class CadastroProdutoComponent implements OnInit {
   token: string | null = null;
   userInfo: any;
   base64Image: string | null = null;
+  base64Images: string[] = []; // Array de imagens
   isSubmitting: boolean = false;
 
   constructor(
@@ -47,22 +48,51 @@ export class CadastroProdutoComponent implements OnInit {
   }
 
   onFileChange(event: any): void {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.base64Image = reader.result as string;
-        this.productForm.patchValue({ imagem: file.name });
-        this.productForm.get('imagem')?.updateValueAndValidity();
-      };
-      reader.readAsDataURL(file);
+    const files = event.target.files;
+    if (files && files.length > 0) {
+      // Limita a 5 imagens
+      const maxImages = 5;
+      const filesToProcess = Array.from(files).slice(0, maxImages);
+      
+      filesToProcess.forEach((file: any) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const base64 = reader.result as string;
+          this.base64Images.push(base64);
+          
+          // Define primeira imagem como principal (retrocompatibilidade)
+          if (this.base64Images.length === 1) {
+            this.base64Image = base64;
+          }
+          
+          this.productForm.patchValue({ imagem: 'image.jpg' });
+          this.productForm.get('imagem')?.updateValueAndValidity();
+        };
+        reader.readAsDataURL(file);
+      });
     }
   }
 
-  removeImage(): void {
-    this.base64Image = null;
-    this.productForm.patchValue({ imagem: null });
-    this.productForm.get('imagem')?.setErrors({ required: true });
+  removeImage(index?: number): void {
+    if (index !== undefined) {
+      // Remove imagem específica
+      this.base64Images.splice(index, 1);
+      
+      // Atualiza imagem principal
+      if (this.base64Images.length > 0) {
+        this.base64Image = this.base64Images[0];
+      } else {
+        this.base64Image = null;
+        this.productForm.patchValue({ imagem: null });
+        this.productForm.get('imagem')?.setErrors({ required: true });
+      }
+    } else {
+      // Remove todas as imagens
+      this.base64Image = null;
+      this.base64Images = [];
+      this.productForm.patchValue({ imagem: null });
+      this.productForm.get('imagem')?.setErrors({ required: true });
+    }
   }
 
   cancel(): void {
@@ -76,13 +106,14 @@ export class CadastroProdutoComponent implements OnInit {
       return;
     }
 
-    if (this.userInfo && this.userInfo.id !== null && this.base64Image) {
+    if (this.userInfo && this.userInfo.id !== null && this.base64Images.length > 0) {
       this.isSubmitting = true;
       
       const productData = {
         ...this.productForm.value,
         usuarioId: this.userInfo.id,
-        imagem: this.base64Image
+        imagem: this.base64Images[0], // Primeira imagem como principal
+        imagens: this.base64Images // Array de todas as imagens
       };
       
       console.log('productData', productData);
