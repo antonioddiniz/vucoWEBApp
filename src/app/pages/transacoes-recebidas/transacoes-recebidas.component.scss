@@ -317,8 +317,10 @@
     width: 95%;
     margin: 20px;
     margin-top: 20px;
+    margin-bottom: 100px; // Espaço para a navbar
     padding-top: calc(32px + env(safe-area-inset-top, 0px)); // padding padrão + safe area
-    max-height: calc(100vh - 40px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(32px + env(safe-area-inset-bottom, 0px)); // padding padrão + safe area
+    max-height: calc(100vh - 120px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
     overflow-y: auto;
     backface-visibility: hidden;
     
@@ -333,6 +335,7 @@
   gap: 12px;
   justify-content: flex-end;
   margin-top: 24px;
+  padding-bottom: env(safe-area-inset-bottom, 0px); // Safe area para botões
 }
 
 .modal-header {

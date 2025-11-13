@@ -114,8 +114,10 @@
   align-items: center;
   gap: 12px;
   padding: 12px 16px;
+  padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px)); // Adiciona safe area
   background-color: #fff;
   box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 80px; // Espaço para a navbar (altura típica 60-80px)
   
   .mensagem-input {
     flex: 1;

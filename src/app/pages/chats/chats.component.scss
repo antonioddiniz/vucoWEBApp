@@ -1,5 +1,6 @@
 .chats-container {
   padding: 16px;
+  padding-bottom: calc(16px + 80px + env(safe-area-inset-bottom, 0px)); // padding + navbar + safe area
   max-width: 800px;
   margin: 0 auto;
   background-color: #f5f5f5;
