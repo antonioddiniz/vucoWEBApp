@@ -43,7 +43,7 @@ export class ChatsComponent implements OnInit {
     
     try {
       // Busca chats primeiro
-      const chats = await this.chatService.obterChatsPorUsuario(this.usuarioId).toPromise();
+      const chats = await this.chatService.obterChatsPorUsuario(this.usuarioId).toPromise() || [];
       
       // Tenta buscar transações, mas não falha se não encontrar
       let transacoes: any[] = [];

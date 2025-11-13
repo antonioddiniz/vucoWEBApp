@@ -86,7 +86,7 @@ export class ConversaComponent implements OnInit, OnDestroy, AfterViewChecked {
     
     try {
       // Busca chats primeiro
-      const chats = await this.chatService.obterChatsPorUsuario(this.usuarioId).toPromise();
+      const chats = await this.chatService.obterChatsPorUsuario(this.usuarioId).toPromise() || [];
       
       // Tenta buscar transações, mas não falha se não encontrar
       let transacoes: any[] = [];
@@ -97,7 +97,7 @@ export class ConversaComponent implements OnInit, OnDestroy, AfterViewChecked {
         // Continua sem transações - apenas com chat
       }
       
-      const chatEncontrado = chats?.find((c: Chat) => c.id === this.chatId);
+      const chatEncontrado = chats.find((c: Chat) => c.id === this.chatId);
       
       if (chatEncontrado) {
         const transacao: Transacao | undefined = transacoes.find((t: Transacao) => t.id === chatEncontrado.transacaoId);
