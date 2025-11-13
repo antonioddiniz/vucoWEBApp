@@ -35,7 +35,7 @@ export interface EnviarMensagemDto {
   providedIn: 'root'
 })
 export class ChatService {
-  private apiUrl = `${environment.apiUrl}/chat`;
+  private apiUrl = `${environment.apiUrl}/v1/chat`;
   private chatsSubject = new BehaviorSubject<Chat[]>([]);
   public chats$ = this.chatsSubject.asObservable();
 
