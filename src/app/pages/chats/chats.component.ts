@@ -42,11 +42,17 @@ export class ChatsComponent implements OnInit {
     this.carregando = true;
     
     try {
-      // Busca chats e transações em paralelo
-      const { chats, transacoes } = await forkJoin({
-        chats: this.chatService.obterChatsPorUsuario(this.usuarioId),
-        transacoes: this.transacaoService.getTransacoesByUsuario()
-      }).toPromise() as any;
+      // Busca chats primeiro
+      const chats = await this.chatService.obterChatsPorUsuario(this.usuarioId).toPromise();
+      
+      // Tenta buscar transações, mas não falha se não encontrar
+      let transacoes: any[] = [];
+      try {
+        transacoes = await this.transacaoService.getTransacoesByUsuario().toPromise() || [];
+      } catch (transacaoError: any) {
+        console.warn('Não foi possível carregar transações:', transacaoError.status);
+        // Continua sem transações - apenas com chats
+      }
       
       console.log('Chats carregados:', chats);
       console.log('Transações carregadas:', transacoes);

@@ -85,12 +85,19 @@ export class ConversaComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.carregandoChat = true;
     
     try {
-      const { chats, transacoes } = await forkJoin({
-        chats: this.chatService.obterChatsPorUsuario(this.usuarioId),
-        transacoes: this.transacaoService.getTransacoesByUsuario()
-      }).toPromise() as any;
+      // Busca chats primeiro
+      const chats = await this.chatService.obterChatsPorUsuario(this.usuarioId).toPromise();
       
-      const chatEncontrado = chats.find((c: Chat) => c.id === this.chatId);
+      // Tenta buscar transações, mas não falha se não encontrar
+      let transacoes: any[] = [];
+      try {
+        transacoes = await this.transacaoService.getTransacoesByUsuario().toPromise() || [];
+      } catch (transacaoError: any) {
+        console.warn('Não foi possível carregar transações:', transacaoError.status);
+        // Continua sem transações - apenas com chat
+      }
+      
+      const chatEncontrado = chats?.find((c: Chat) => c.id === this.chatId);
       
       if (chatEncontrado) {
         const transacao: Transacao | undefined = transacoes.find((t: Transacao) => t.id === chatEncontrado.transacaoId);
