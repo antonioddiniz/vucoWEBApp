@@ -101,19 +101,33 @@ export class ChatsComponent implements OnInit {
   }
 
   formatarData(data: string): string {
-    const dataObj = new Date(data);
+    // Garante que a data seja interpretada corretamente
+    const dataObj = new Date(data + 'Z'); // Adiciona Z para tratar como UTC
     const agora = new Date();
-    const diff = agora.getTime() - dataObj.getTime();
+    
+    // Calcula diferença em dias considerando timezone
+    const dataObjBrasil = new Date(dataObj.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
+    const agoraBrasil = new Date(agora.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
+    
+    // Zera horas para comparar apenas datas
+    dataObjBrasil.setHours(0, 0, 0, 0);
+    agoraBrasil.setHours(0, 0, 0, 0);
+    
+    const diff = agoraBrasil.getTime() - dataObjBrasil.getTime();
     const dias = Math.floor(diff / (1000 * 60 * 60 * 24));
     
     if (dias === 0) {
-      return dataObj.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+      return dataObj.toLocaleTimeString('pt-BR', { 
+        hour: '2-digit', 
+        minute: '2-digit',
+        timeZone: 'America/Sao_Paulo'
+      });
     } else if (dias === 1) {
       return 'Ontem';
     } else if (dias < 7) {
       return `${dias} dias atrás`;
     } else {
-      return dataObj.toLocaleDateString('pt-BR');
+      return dataObj.toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' });
     }
   }
 

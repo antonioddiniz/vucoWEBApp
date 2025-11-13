@@ -235,7 +235,12 @@ export class ConversaComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   formatarHora(data: string): string {
-    return new Date(data).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    const dataObj = new Date(data + 'Z'); // Adiciona Z para tratar como UTC
+    return dataObj.toLocaleTimeString('pt-BR', { 
+      hour: '2-digit', 
+      minute: '2-digit',
+      timeZone: 'America/Sao_Paulo'
+    });
   }
 
   getProdutosUsuario(): any[] {
