@@ -23,10 +23,32 @@
 
       <div class="chat-info">
         <div class="chat-header">
-          <h3 class="chat-nome">Chat #{{ chat.transacaoId }}</h3>
+          <h3 class="chat-nome">Troca #{{ chat.transacaoId }}</h3>
           <span class="chat-data" *ngIf="chat.ultimaMensagem">
             {{ formatarData(chat.ultimaMensagem.dataEnvio) }}
           </span>
+        </div>
+
+        <!-- Informações dos produtos da troca -->
+        <div class="troca-produtos" *ngIf="chat.transacao">
+          <div class="produtos-grupo">
+            <span class="produtos-label">Seus produtos:</span>
+            <div class="produtos-miniaturas">
+              <div class="produto-miniatura" *ngFor="let produto of getProdutosUsuario(chat)" [title]="produto.nome">
+                <img [src]="produto.imagem" [alt]="produto.nome" (error)="onImageError($event)">
+              </div>
+              <span *ngIf="getProdutosUsuario(chat).length === 0" class="sem-produtos">Nenhum produto</span>
+            </div>
+          </div>
+          <div class="produtos-grupo">
+            <span class="produtos-label">Produtos recebidos:</span>
+            <div class="produtos-miniaturas">
+              <div class="produto-miniatura" *ngFor="let produto of getProdutosOutroUsuario(chat)" [title]="produto.nome">
+                <img [src]="produto.imagem" [alt]="produto.nome" (error)="onImageError($event)">
+              </div>
+              <span *ngIf="getProdutosOutroUsuario(chat).length === 0" class="sem-produtos">Nenhum produto</span>
+            </div>
+          </div>
         </div>
 
         <div class="chat-preview">

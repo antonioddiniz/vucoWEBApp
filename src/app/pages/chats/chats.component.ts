@@ -2,7 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ChatService, Chat } from '../../services/chat.service';
 import { AuthService } from '../../services/auth.service';
+import { TransacaoService, Transacao } from '../../services/transacao.service';
+import { CryptoService } from '../../services/crypto.service';
 import { jwtDecode } from 'jwt-decode';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-chats',
@@ -17,6 +20,8 @@ export class ChatsComponent implements OnInit {
   constructor(
     private chatService: ChatService,
     private authService: AuthService,
+    private transacaoService: TransacaoService,
+    private cryptoService: CryptoService,
     private router: Router
   ) {}
 
@@ -29,22 +34,60 @@ export class ChatsComponent implements OnInit {
     const token = this.authService.getToken();
     if (token) {
       const decodedToken: any = jwtDecode(token);
-      this.usuarioId = decodedToken.userId;
+      this.usuarioId = Number(decodedToken.userId);
     }
   }
 
-  carregarChats(): void {
+  async carregarChats(): Promise<void> {
     this.carregando = true;
-    this.chatService.obterChatsPorUsuario(this.usuarioId).subscribe({
-      next: (chats) => {
-        this.chats = chats;
-        this.carregando = false;
-      },
-      error: (err) => {
-        console.error('Erro ao carregar chats:', err);
-        this.carregando = false;
-      }
-    });
+    
+    try {
+      // Busca chats e transações em paralelo
+      const { chats, transacoes } = await forkJoin({
+        chats: this.chatService.obterChatsPorUsuario(this.usuarioId),
+        transacoes: this.transacaoService.getTransacoesByUsuario()
+      }).toPromise() as any;
+      
+      console.log('Chats carregados:', chats);
+      console.log('Transações carregadas:', transacoes);
+      
+      // Enriquece chats com dados das transações e descriptografa última mensagem
+      this.chats = await Promise.all(
+        chats.map(async (chat: any) => {
+          const transacao: Transacao | undefined = transacoes.find((t: Transacao) => t.id === chat.transacaoId);
+          
+          // Descriptografa a última mensagem se existir
+          let ultimaMensagem = chat.ultimaMensagem;
+          if (ultimaMensagem && this.cryptoService.isEncrypted(ultimaMensagem.texto)) {
+            try {
+              const textoDescriptografado = await this.cryptoService.decrypt(
+                ultimaMensagem.texto,
+                chat.usuario1Id,
+                chat.usuario2Id
+              );
+              ultimaMensagem = {
+                ...ultimaMensagem,
+                texto: textoDescriptografado
+              };
+            } catch (error) {
+              console.error('Erro ao descriptografar última mensagem:', error);
+            }
+          }
+          
+          return {
+            ...chat,
+            transacao,
+            ultimaMensagem
+          } as Chat;
+        })
+      );
+      
+      console.log('Chats enriquecidos:', this.chats);
+    } catch (err) {
+      console.error('Erro ao carregar chats:', err);
+    } finally {
+      this.carregando = false;
+    }
   }
 
   abrirConversa(chat: Chat): void {
@@ -65,6 +108,37 @@ export class ChatsComponent implements OnInit {
       return `${dias} dias atrás`;
     } else {
       return dataObj.toLocaleDateString('pt-BR');
+    }
+  }
+
+  getProdutosUsuario(chat: Chat): any[] {
+    if (!chat.transacao?.transacaoProdutos) return [];
+    
+    // Se eu sou Usuario1, quero ver meus produtos (UsuarioTipo = true)
+    // Se eu sou Usuario2, quero ver meus produtos (UsuarioTipo = false)
+    const souUsuario1 = chat.usuario1Id === this.usuarioId;
+    
+    return chat.transacao.transacaoProdutos
+      .filter((tp: any) => tp.usuarioTipo === souUsuario1)
+      .map((tp: any) => tp.produto);
+  }
+
+  getProdutosOutroUsuario(chat: Chat): any[] {
+    if (!chat.transacao?.transacaoProdutos) return [];
+    
+    // Se eu sou Usuario1, quero ver os produtos do Usuario2 (UsuarioTipo = false)
+    // Se eu sou Usuario2, quero ver os produtos do Usuario1 (UsuarioTipo = true)
+    const souUsuario1 = chat.usuario1Id === this.usuarioId;
+    
+    return chat.transacao.transacaoProdutos
+      .filter((tp: any) => tp.usuarioTipo !== souUsuario1)
+      .map((tp: any) => tp.produto);
+  }
+
+  onImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    if (img) {
+      img.src = 'assets/placeholder.png';
     }
   }
 }

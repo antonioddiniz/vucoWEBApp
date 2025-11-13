@@ -5,12 +5,39 @@ import { switchMap } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 import { environment } from '../../environments/environment';
 
-interface Transacao {
+export interface TransacaoProduto {
+  id: number;
+  transacaoId: number;
+  produtoId: number;
+  usuarioTipo: boolean; // true = Usuario1, false = Usuario2
+  produto: {
+    id: number;
+    nome: string;
+    descricao?: string;
+    imagem?: string;
+  };
+}
+
+// Interface para criar nova transação
+export interface CriarTransacaoDto {
   idUsuario1: number;
   idUsuario2: number;
   produtosUsuario1: number[];  // Array de IDs dos produtos
   produtosUsuario2: number[];  // Array de IDs dos produtos
   transacaoOriginalId?: number | null;
+}
+
+// Interface para transação completa retornada do backend
+export interface Transacao {
+  id: number;
+  idUsuario1: number;
+  idUsuario2: number;
+  status: number;
+  dataTransacao?: string;
+  produtosUsuario1?: number[];  // Array de IDs dos produtos
+  produtosUsuario2?: number[];  // Array de IDs dos produtos
+  transacaoOriginalId?: number | null;
+  transacaoProdutos?: TransacaoProduto[]; // Dados completos que vêm do backend
 }
 
 @Injectable({
@@ -23,7 +50,7 @@ export class TransacaoService {
               private authService: AuthService
   ) {}
 
-  registrarTransacao(transacao: Transacao): Observable<any> {
+  registrarTransacao(transacao: CriarTransacaoDto): Observable<any> {
     return this.http.post(`${this.apiUrl}/registrarTransacao`, transacao);
   }
 

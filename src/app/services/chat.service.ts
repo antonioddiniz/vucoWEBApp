@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
+import { Transacao } from './transacao.service';
 
 export interface Chat {
   id: number;
@@ -14,6 +15,7 @@ export interface Chat {
   outroUsuarioId?: number;
   ultimaMensagem?: Mensagem;
   mensagensNaoLidas?: number;
+  transacao?: Transacao;
 }
 
 export interface Mensagem {

@@ -130,15 +130,6 @@
   
   <button 
     class="nav-item" 
-    *ngIf="isAuthenticated()"
-    [class.active]="isRouteActive('/chats')"
-    (click)="navigateTo('/chats')">
-    <mat-icon>chat</mat-icon>
-    <span>Chat</span>
-  </button>
-  
-  <button 
-    class="nav-item" 
     [class.active]="isRouteActive('/feed')"
     (click)="navigateTo('/feed')">
     <mat-icon>grid_view</mat-icon>
@@ -148,9 +139,10 @@
   <button 
     class="nav-item" 
     *ngIf="isAuthenticated()"
-    (click)="toggleMenu()">
-    <mat-icon>person</mat-icon>
-    <span>Perfil</span>
+    [class.active]="isRouteActive('/chats')"
+    (click)="navigateTo('/chats')">
+    <mat-icon>chat</mat-icon>
+    <span>Chat</span>
   </button>
   
   <button 

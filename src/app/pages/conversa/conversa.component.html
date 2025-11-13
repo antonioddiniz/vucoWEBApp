@@ -1,21 +1,49 @@
-<div class="conversa-container">
+<div class="conversa-container"
+     [style.transform]="containerTransform"
+     [class.swiping]="isSwipingBack"
+     (touchstart)="onTouchStart($event)"
+     (touchmove)="onTouchMove($event)"
+     (touchend)="onTouchEnd($event)">
   <div class="conversa-header">
     <button mat-icon-button (click)="voltar()" class="back-button">
       <mat-icon>arrow_back</mat-icon>
     </button>
-    <h2 class="chat-title">Chat #{{ chatId }}</h2>
+    <div class="header-content">
+      <h2 class="chat-title">Troca #{{ chat?.transacaoId || chatId }}</h2>
+      <div class="troca-info" *ngIf="chat?.transacao">
+        <div class="troca-resumo">
+          <span class="info-label">Você oferece:</span>
+          <div class="produtos-miniaturas">
+            <div class="produto-miniatura" *ngFor="let produto of getProdutosUsuario()" [title]="produto.nome">
+              <img [src]="produto.imagem" [alt]="produto.nome" (error)="onImageError($event)">
+            </div>
+            <span *ngIf="getProdutosUsuario().length === 0" class="sem-produtos">Nenhum</span>
+          </div>
+        </div>
+        <div class="troca-resumo">
+          <span class="info-label">Você recebe:</span>
+          <div class="produtos-miniaturas">
+            <div class="produto-miniatura" *ngFor="let produto of getProdutosOutroUsuario()" [title]="produto.nome">
+              <img [src]="produto.imagem" [alt]="produto.nome" (error)="onImageError($event)">
+            </div>
+            <span *ngIf="getProdutosOutroUsuario().length === 0" class="sem-produtos">Nenhum</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="mensagens-container" #mensagensContainer>
-    <div *ngIf="carregando" class="loading">
-      <p>Carregando mensagens...</p>
+    <div *ngIf="carregando || descriptografando" class="loading">
+      <p *ngIf="carregando">Carregando mensagens...</p>
+      <p *ngIf="!carregando && descriptografando">🔒 Descriptografando...</p>
     </div>
 
-    <div *ngIf="!carregando && mensagens.length === 0" class="sem-mensagens">
+    <div *ngIf="!carregando && !descriptografando && mensagens.length === 0" class="sem-mensagens">
       <p>👋 Inicie a conversa!</p>
     </div>
 
-    <div class="mensagens-lista" *ngIf="!carregando">
+    <div class="mensagens-lista" *ngIf="!carregando && !descriptografando && mensagens.length > 0">
       <div 
         *ngFor="let msg of mensagens" 
         class="mensagem"

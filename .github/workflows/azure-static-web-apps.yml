@@ -14,23 +14,48 @@ jobs:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
     name: Build and Deploy Job
+    
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
           submodules: true
           lfs: false
       
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '18.19.0'
           cache: 'npm'
       
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --legacy-peer-deps
+      
+      - name: TypeScript type checking
+        run: npx tsc --noEmit
+        continue-on-error: false
       
       - name: Build Angular app
         run: npm run build -- --configuration production
+        env:
+          NODE_OPTIONS: "--max_old_space_size=4096"
+      
+      - name: Check build output
+        run: |
+          if [ ! -d "dist/vuco-appweb2/browser" ]; then
+            echo "Build failed - output directory not found"
+            exit 1
+          fi
+          echo "Build successful - files generated:"
+          ls -la dist/vuco-appweb2/browser/
       
       - name: Deploy to Azure Static Web Apps
         id: builddeploy
@@ -43,6 +68,10 @@ jobs:
           api_location: ""
           output_location: ""
           skip_app_build: true
+      
+      - name: Deployment URL
+        if: success()
+        run: echo "Deployed to ${{ steps.builddeploy.outputs.static_web_app_url }}"
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'

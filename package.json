@@ -8,6 +8,8 @@
     "build:prod": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
+    "pre-deploy": "./scripts/pre-deploy.sh",
+    "typecheck": "tsc --noEmit",
     "android:sync": "npx cap sync android",
     "android:open": "npx cap open android",
     "android:run": "npm run build:prod && npm run android:sync && npm run android:open"
