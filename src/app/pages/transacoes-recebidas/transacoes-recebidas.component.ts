@@ -3,6 +3,7 @@ import { TransacaoService } from '../../services/transacao.service';
 import { ProdutoService } from '../../services/produto.service';
 import { AuthService } from '../../services/auth.service';
 import { ModalService } from '../../services/modal.service';
+import { ChatService } from '../../services/chat.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -35,6 +36,7 @@ export class TransacoesRecebidasComponent implements OnInit {
     private produtoService: ProdutoService,
     private authService: AuthService, // Serviço de autenticação
     private modalService: ModalService, // Serviço de modal
+    private chatService: ChatService, // Serviço de chat
     private router: Router // Serviço de navegação
   ) {}
 
@@ -302,5 +304,30 @@ export class TransacoesRecebidasComponent implements OnInit {
   // Verifica se o usuário logado foi quem enviou a transação
   isUsuarioEnviou(transacao: any): boolean {
     return this.usuarioLogadoId === transacao.idUsuario1;
+  }
+
+  // Abre o chat de uma transação concluída
+  abrirChat(transacao: any): void {
+    this.chatService.obterChatPorTransacao(transacao.id).subscribe({
+      next: (chat) => {
+        this.fecharDetalhes();
+        this.router.navigate(['/conversa', chat.id]);
+      },
+      error: (err) => {
+        console.error('Erro ao buscar chat:', err);
+        // Se o chat não existir, tentar criar
+        if (err.status === 404) {
+          this.chatService.criarChat(transacao.id).subscribe({
+            next: (novoChat) => {
+              this.fecharDetalhes();
+              this.router.navigate(['/conversa', novoChat.id]);
+            },
+            error: (createErr) => {
+              console.error('Erro ao criar chat:', createErr);
+            }
+          });
+        }
+      }
+    });
   }
 }

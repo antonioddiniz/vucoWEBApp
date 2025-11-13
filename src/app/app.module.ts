@@ -36,6 +36,8 @@ import { TransacoesRecebidasComponent } from './pages/transacoes-recebidas/trans
 import { BannerCarouselComponent } from './pages/banner-carousel/banner-carousel.component';
 import { BuscaProdutosComponent } from './pages/busca-produtos/busca-produtos.component';
 import { FeedProdutosComponent } from './pages/feed-produtos/feed-produtos.component';
+import { ChatsComponent } from './pages/chats/chats.component';
+import { ConversaComponent } from './pages/conversa/conversa.component';
 
 
 
@@ -58,6 +60,8 @@ import { FeedProdutosComponent } from './pages/feed-produtos/feed-produtos.compo
     BannerCarouselComponent,
     BuscaProdutosComponent,
     FeedProdutosComponent,
+    ChatsComponent,
+    ConversaComponent,
   ],
   imports: [
     BrowserModule,

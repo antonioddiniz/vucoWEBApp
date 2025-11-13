@@ -10,6 +10,8 @@ import { TrocaComponent } from './pages/troca/troca.component';
 import { TransacoesRecebidasComponent } from './pages/transacoes-recebidas/transacoes-recebidas.component';
 import { BuscaProdutosComponent } from './pages/busca-produtos/busca-produtos.component';
 import { FeedProdutosComponent } from './pages/feed-produtos/feed-produtos.component';
+import { ChatsComponent } from './pages/chats/chats.component';
+import { ConversaComponent } from './pages/conversa/conversa.component';
 // import { ContraPropostaComponent } from './pages/contra-proposta/contra-proposta.component';
 
 
@@ -25,6 +27,8 @@ const routes: Routes = [
   { path: 'troca', component: TrocaComponent},
   { path: 'transacoes-recebidas', component: TransacoesRecebidasComponent},
   { path: 'busca', component: BuscaProdutosComponent},
+  { path: 'chats', component: ChatsComponent},
+  { path: 'conversa/:id', component: ConversaComponent},
   // { path: 'contra-proposta', component: ContraPropostaComponent },
 
 ];

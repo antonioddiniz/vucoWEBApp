@@ -1,0 +1,59 @@
+<div class="conversa-container">
+  <div class="conversa-header">
+    <button mat-icon-button (click)="voltar()" class="back-button">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h2 class="chat-title">Chat #{{ chatId }}</h2>
+  </div>
+
+  <div class="mensagens-container" #mensagensContainer>
+    <div *ngIf="carregando" class="loading">
+      <p>Carregando mensagens...</p>
+    </div>
+
+    <div *ngIf="!carregando && mensagens.length === 0" class="sem-mensagens">
+      <p>👋 Inicie a conversa!</p>
+    </div>
+
+    <div class="mensagens-lista" *ngIf="!carregando">
+      <div 
+        *ngFor="let msg of mensagens" 
+        class="mensagem"
+        [class.minha-mensagem]="ehMinhaMsg(msg)"
+        [class.outra-mensagem]="!ehMinhaMsg(msg)">
+        
+        <div class="mensagem-balao">
+          <p class="mensagem-texto">{{ msg.texto }}</p>
+          <div class="mensagem-footer">
+            <span class="mensagem-hora">{{ formatarHora(msg.dataEnvio) }}</span>
+            <mat-icon *ngIf="ehMinhaMsg(msg) && msg.lida" class="check-lida">
+              done_all
+            </mat-icon>
+            <mat-icon *ngIf="ehMinhaMsg(msg) && !msg.lida" class="check-enviada">
+              done
+            </mat-icon>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="input-container">
+    <mat-form-field appearance="outline" class="mensagem-input">
+      <input 
+        matInput 
+        [(ngModel)]="novoTexto"
+        (keyup.enter)="enviarMensagem()"
+        placeholder="Digite sua mensagem..."
+        [disabled]="enviando">
+    </mat-form-field>
+    <button 
+      mat-fab 
+      color="primary" 
+      (click)="enviarMensagem()"
+      [disabled]="!novoTexto.trim() || enviando"
+      class="btn-enviar">
+      <mat-icon>send</mat-icon>
+    </button>
+  </div>
+</div>

@@ -1,0 +1,47 @@
+<div class="chats-container">
+  <h2 class="page-title">Mensagens</h2>
+
+  <div *ngIf="carregando" class="loading">
+    <p>Carregando chats...</p>
+  </div>
+
+  <div *ngIf="!carregando && chats.length === 0" class="sem-chats">
+    <p>💬 Você ainda não tem conversas</p>
+    <p class="hint">As conversas aparecerão aqui quando você aceitar uma transação</p>
+  </div>
+
+  <div class="chats-lista" *ngIf="!carregando && chats.length > 0">
+    <div 
+      *ngFor="let chat of chats" 
+      class="chat-card" 
+      (click)="abrirConversa(chat)"
+      [class.com-nao-lidas]="chat.mensagensNaoLidas && chat.mensagensNaoLidas > 0">
+      
+      <div class="chat-avatar">
+        <span class="avatar-icon">👤</span>
+      </div>
+
+      <div class="chat-info">
+        <div class="chat-header">
+          <h3 class="chat-nome">Chat #{{ chat.transacaoId }}</h3>
+          <span class="chat-data" *ngIf="chat.ultimaMensagem">
+            {{ formatarData(chat.ultimaMensagem.dataEnvio) }}
+          </span>
+        </div>
+
+        <div class="chat-preview">
+          <p class="ultima-mensagem" *ngIf="chat.ultimaMensagem">
+            {{ chat.ultimaMensagem.texto }}
+          </p>
+          <p class="ultima-mensagem sem-mensagens" *ngIf="!chat.ultimaMensagem">
+            Nenhuma mensagem ainda
+          </p>
+          
+          <span class="badge-nao-lidas" *ngIf="chat.mensagensNaoLidas && chat.mensagensNaoLidas > 0">
+            {{ chat.mensagensNaoLidas }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -218,6 +218,14 @@
           </button>
         </ng-template>
       </div>
+      
+      <!-- Botão de Chat para transações concluídas -->
+      <div class="modal-actions" *ngIf="statusSelecionado === 1">
+        <button mat-raised-button color="primary" (click)="abrirChat(transacaoSelecionada)">
+          <mat-icon>chat</mat-icon>
+          Abrir Chat
+        </button>
+      </div>
     </div>
   </div>
 </div>

@@ -1,0 +1,137 @@
+.chats-container {
+  padding: 16px;
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.loading,
+.sem-chats {
+  text-align: center;
+  padding: 40px 20px;
+  color: rgba(0, 0, 0, 0.6);
+  
+  .hint {
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.5);
+    margin-top: 8px;
+  }
+}
+
+.chats-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.chat-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background-color: #fff;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+  }
+  
+  &.com-nao-lidas {
+    border-left: 4px solid #004C99;
+  }
+}
+
+.chat-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #004C99, #0066CC);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  
+  .avatar-icon {
+    font-size: 24px;
+  }
+}
+
+.chat-info {
+  flex: 1;
+  min-width: 0; // Permite text-overflow funcionar
+}
+
+.chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.chat-nome {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.chat-data {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.5);
+  white-space: nowrap;
+}
+
+.chat-preview {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.ultima-mensagem {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.6);
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  
+  &.sem-mensagens {
+    font-style: italic;
+    color: rgba(0, 0, 0, 0.4);
+  }
+}
+
+.badge-nao-lidas {
+  background-color: #004C99;
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 12px;
+  min-width: 24px;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .chats-container {
+    padding: 24px;
+  }
+  
+  .page-title {
+    font-size: 28px;
+  }
+}
